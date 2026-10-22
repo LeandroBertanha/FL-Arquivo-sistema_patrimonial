@@ -201,10 +201,10 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           >
             <img
               src={logoGrupoVl}
-              alt="Logo"
-              className="h-12 w-auto max-w-[120px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform group-hover:scale-[1.02]"
+              alt="Logo Grupo VL"
+              className="h-16 w-auto max-w-[170px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform group-hover:scale-[1.02]"
             />
-            <h1 className="mt-2 font-bold text-[#D9C58A] text-sm sm:text-[15px] tracking-wide text-center leading-tight">
+            <h1 className="mt-2 font-normal text-[#D9C58A] text-xs tracking-wide text-center leading-tight">
               Gestão Patrimonial
             </h1>
           </Link>
@@ -237,10 +237,10 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
             >
               <img
                 src={logoGrupoVl}
-                alt="Logo"
-                className="h-12 w-auto max-w-[120px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
+                alt="Logo Grupo VL"
+                className="h-16 w-auto max-w-[170px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
               />
-              <span className="mt-2 font-bold text-[#D9C58A] text-sm sm:text-[15px] tracking-wide text-center leading-tight block">
+              <span className="mt-2 font-normal text-[#D9C58A] text-xs tracking-wide text-center leading-tight block">
                 Gestão Patrimonial
               </span>
             </Link>
