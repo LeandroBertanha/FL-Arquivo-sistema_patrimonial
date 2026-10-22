@@ -151,45 +151,49 @@ export default function Movimentacoes() {
 
         <TabsContent value="movimentos" className="pt-2">
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                <tr>
-                  <th className="py-3 px-4">Tipo</th>
-                  <th className="py-3 px-4">Pasta</th>
-                  <th className="py-3 px-4">Código</th>
-                  <th className="py-3 px-4">Origem → Destino</th>
-                  <th className="py-3 px-4">Responsável / Usuário</th>
-                  <th className="py-3 px-4">Data / Hora</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {movements.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-50/70">
-                    <td className="py-3 px-4">
-                      <Badge
-                        variant="outline"
-                        className="text-[10px] bg-blue-50 text-blue-700 border-blue-200"
-                      >
-                        {m.type}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
-                      {m.folder_title}
-                    </td>
-                    <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                      {m.folder_code || '—'}
-                    </td>
-                    <td className="py-3 px-4 text-slate-600">
-                      {m.origin_location} → <strong>{m.destination_location}</strong>
-                    </td>
-                    <td className="py-3 px-4 text-slate-700">{m.user_name || 'Sistema'}</td>
-                    <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
-                      {new Date(m.created).toLocaleString('pt-BR')}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[700px] text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                  <tr>
+                    <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                    <th className="py-3 px-4 min-w-[180px]">Pasta</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Origem → Destino</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Responsável / Usuário</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Data / Hora</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {movements.map((m) => (
+                    <tr key={m.id} className="hover:bg-slate-50/70">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-blue-50 text-blue-700 border-blue-200"
+                        >
+                          {m.type}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
+                        {m.folder_title}
+                      </td>
+                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                        {m.folder_code || '—'}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                        {m.origin_location} → <strong>{m.destination_location}</strong>
+                      </td>
+                      <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                        {m.user_name || 'Sistema'}
+                      </td>
+                      <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
+                        {new Date(m.created).toLocaleString('pt-BR')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </TabsContent>
 
@@ -200,50 +204,56 @@ export default function Movimentacoes() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Pasta</th>
-                    <th className="py-3 px-4">Código</th>
-                    <th className="py-3 px-4">Em Posse de</th>
-                    <th className="py-3 px-4">Finalidade</th>
-                    <th className="py-3 px-4">Data Saída</th>
-                    <th className="py-3 px-4">Devolução Prevista</th>
-                    <th className="py-3 px-4 text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {checkouts.map((co) => (
-                    <tr key={co.id} className="hover:bg-red-50/20">
-                      <td className="py-3 px-4 font-semibold text-slate-900">{co.folder_title}</td>
-                      <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                        {co.folder_code}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-red-700">{co.requester_name}</td>
-                      <td className="py-3 px-4 text-slate-600">{co.purpose}</td>
-                      <td className="py-3 px-4 text-slate-400">
-                        {co.checkout_date
-                          ? new Date(co.checkout_date).toLocaleDateString('pt-BR')
-                          : '—'}
-                      </td>
-                      <td className="py-3 px-4 text-slate-700 font-semibold">
-                        {co.expected_return_date
-                          ? new Date(co.expected_return_date).toLocaleDateString('pt-BR')
-                          : 'Sem prazo'}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <Button
-                          size="sm"
-                          onClick={() => openCheckinFor(co)}
-                          className="h-7 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Devolver (Check-in)
-                        </Button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[700px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 min-w-[180px]">Pasta</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Em Posse de</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Finalidade</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Data Saída</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Devolução Prevista</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {checkouts.map((co) => (
+                      <tr key={co.id} className="hover:bg-red-50/20">
+                        <td className="py-3 px-4 font-semibold text-slate-900">
+                          {co.folder_title}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {co.folder_code}
+                        </td>
+                        <td className="py-3 px-4 font-bold text-red-700 whitespace-nowrap">
+                          {co.requester_name}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{co.purpose}</td>
+                        <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
+                          {co.checkout_date
+                            ? new Date(co.checkout_date).toLocaleDateString('pt-BR')
+                            : '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700 font-semibold whitespace-nowrap">
+                          {co.expected_return_date
+                            ? new Date(co.expected_return_date).toLocaleDateString('pt-BR')
+                            : 'Sem prazo'}
+                        </td>
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          <Button
+                            size="sm"
+                            onClick={() => openCheckinFor(co)}
+                            className="h-7 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Devolver (Check-in)
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>

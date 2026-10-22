@@ -180,45 +180,55 @@ export default function Empresas() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Razão Social</th>
-                <th className="py-3 px-4">Nome Fantasia</th>
-                <th className="py-3 px-4">CNPJ</th>
-                <th className="py-3 px-4">Grupo / Holding</th>
-                <th className="py-3 px-4">Capital</th>
-                <th className="py-3 px-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50/70">
-                  <td className="py-3 px-4 font-semibold text-slate-900">{c.name}</td>
-                  <td className="py-3 px-4 text-slate-600">{c.trade_name || '—'}</td>
-                  <td className="py-3 px-4 font-mono text-slate-600">{c.cnpj || '—'}</td>
-                  <td className="py-3 px-4 text-slate-600">{c.group_name || '—'}</td>
-                  <td className="py-3 px-4 text-slate-700">
-                    {c.capital ? `R$ ${c.capital.toLocaleString('pt-BR')}` : '—'}
-                  </td>
-                  <td className="py-3 px-4">
-                    {c.has_pendencies ? (
-                      <Badge variant="destructive" className="text-[10px]">
-                        Pendência
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
-                      >
-                        Regular
-                      </Badge>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Razão Social</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Nome Fantasia</th>
+                  <th className="py-3 px-4 whitespace-nowrap">CNPJ</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Grupo / Holding</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Capital</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((c) => (
+                  <tr key={c.id} className="hover:bg-slate-50/70">
+                    <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                      {c.name}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                      {c.trade_name || '—'}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
+                      {c.cnpj || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                      {c.group_name || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                      {c.capital ? `R$ ${c.capital.toLocaleString('pt-BR')}` : '—'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {c.has_pendencies ? (
+                        <Badge variant="destructive" className="text-[10px]">
+                          Pendência
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                        >
+                          Regular
+                        </Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

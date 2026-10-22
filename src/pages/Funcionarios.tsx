@@ -314,83 +314,89 @@ export default function Funcionarios() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Caixa</th>
-                <th className="py-3 px-4">Nome do Funcionário</th>
-                <th className="py-3 px-4">Cargo / Função</th>
-                <th className="py-3 px-4">Empresa</th>
-                <th className="py-3 px-4">Situação</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((emp) => (
-                <tr key={emp.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-amber-800 whitespace-nowrap">
-                    {emp.box_code || '—'}
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">{emp.name}</td>
-                  <td className="py-3 px-4 text-slate-600">{emp.role || '—'}</td>
-                  <td className="py-3 px-4 text-slate-600">{emp.company_name || '—'}</td>
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold ${
-                        emp.situation === 'Atual'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-slate-100 text-slate-700'
-                      }`}
-                    >
-                      {emp.situation}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    {emp.needs_review ? (
-                      <Badge
-                        variant="outline"
-                        className="bg-amber-100 text-amber-800 border-amber-300 text-[10px]"
-                      >
-                        Revisão
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]"
-                      >
-                        Regular
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-right whitespace-nowrap">
-                    {canEdit ? (
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openEdit(emp)}
-                          className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setDeleteTarget(emp)}
-                          className="h-7 px-2 text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-slate-400">Somente leitura</span>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                  <th className="py-3 px-4 min-w-[180px]">Nome do Funcionário</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Cargo / Função</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Empresa</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Situação</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((emp) => (
+                  <tr key={emp.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-amber-800 whitespace-nowrap">
+                      {emp.box_code || '—'}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-900">{emp.name}</td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                      {emp.role || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                      {emp.company_name || '—'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold ${
+                          emp.situation === 'Atual'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 text-slate-700'
+                        }`}
+                      >
+                        {emp.situation}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {emp.needs_review ? (
+                        <Badge
+                          variant="outline"
+                          className="bg-amber-100 text-amber-800 border-amber-300 text-[10px]"
+                        >
+                          Revisão
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]"
+                        >
+                          Regular
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      {canEdit ? (
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openEdit(emp)}
+                            className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                          >
+                            <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setDeleteTarget(emp)}
+                            className="h-7 px-2 text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">Somente leitura</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

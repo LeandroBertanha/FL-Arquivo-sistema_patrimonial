@@ -249,66 +249,68 @@ export default function Caixas() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Código</th>
-                <th className="py-3 px-4">Nome da Caixa</th>
-                <th className="py-3 px-4">Categoria</th>
-                <th className="py-3 px-4">Localização Física</th>
-                <th className="py-3 px-4">Ocupação</th>
-                <th className="py-3 px-4">Responsável</th>
-                <th className="py-3 px-4 text-right">Ação</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredBoxes.map((box) => {
-                const itemsInBox = folders.filter((f) => f.box_code === box.code_legacy)
-                const count = itemsInBox.length
-                const cap = box.capacity || 30
-                const pct = Math.min(Math.round((count / cap) * 100), 100)
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Nome da Caixa</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Categoria</th>
+                  <th className="py-3 px-4 min-w-[150px]">Localização Física</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Ocupação</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Responsável</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredBoxes.map((box) => {
+                  const itemsInBox = folders.filter((f) => f.box_code === box.code_legacy)
+                  const count = itemsInBox.length
+                  const cap = box.capacity || 30
+                  const pct = Math.min(Math.round((count / cap) * 100), 100)
 
-                return (
-                  <tr key={box.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-amber-700 whitespace-nowrap">
-                      {box.code_legacy}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-slate-900">{box.name}</td>
-                    <td className="py-3 px-4 text-slate-600">{box.category || 'Geral'}</td>
-                    <td className="py-3 px-4 text-slate-500 max-w-xs truncate">
-                      {box.location_text || '—'}
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <span className="font-semibold text-slate-800">
-                        {count}/{cap} ({pct}%)
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-slate-600">{box.responsible || '—'}</td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setQrBox(box)}
-                          className="h-7 px-2 text-slate-600 hover:text-slate-900"
-                        >
-                          <QrCode className="w-3.5 h-3.5 mr-1" /> QR
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => navigate(`/caixas/${box.id}`)}
-                          className="h-7 px-2.5 text-blue-600 border-blue-200 hover:bg-blue-50"
-                        >
-                          Ver Itens ({count}) →
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <tr key={box.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3 px-4 font-mono font-bold text-amber-700 whitespace-nowrap">
+                        {box.code_legacy}
+                      </td>
+                      <td className="py-3 px-4 font-semibold text-slate-900">{box.name}</td>
+                      <td className="py-3 px-4 text-slate-600">{box.category || 'Geral'}</td>
+                      <td className="py-3 px-4 text-slate-500 max-w-xs truncate">
+                        {box.location_text || '—'}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className="font-semibold text-slate-800">
+                          {count}/{cap} ({pct}%)
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-slate-600">{box.responsible || '—'}</td>
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setQrBox(box)}
+                            className="h-7 px-2 text-slate-600 hover:text-slate-900"
+                          >
+                            <QrCode className="w-3.5 h-3.5 mr-1" /> QR
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate(`/caixas/${box.id}`)}
+                            className="h-7 px-2.5 text-blue-600 border-blue-200 hover:bg-blue-50"
+                          >
+                            Ver Itens ({count}) →
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

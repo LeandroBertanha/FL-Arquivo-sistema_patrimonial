@@ -383,76 +383,78 @@ export default function Inventario() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Código</th>
-                <th className="py-3 px-4">Título da Pasta</th>
-                <th className="py-3 px-4">Caixa</th>
-                <th className="py-3 px-4">Localização Física</th>
-                <th className="py-3 px-4">Arquivo</th>
-                <th className="py-3 px-4">Status Conferência</th>
-                <th className="py-3 px-4 text-right">Ação</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredFolders.map((f) => {
-                const isVerified = !!verifiedFolderIds[f.id]
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                  <th className="py-3 px-4 min-w-[180px]">Título da Pasta</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                  <th className="py-3 px-4 min-w-[150px]">Localização Física</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Arquivo</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status Conferência</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredFolders.map((f) => {
+                  const isVerified = !!verifiedFolderIds[f.id]
 
-                return (
-                  <tr
-                    key={f.id}
-                    className={`hover:bg-slate-50/70 transition-colors ${
-                      isVerified ? 'bg-emerald-50/20' : ''
-                    }`}
-                  >
-                    <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
-                      {f.code_legacy || 'SEM CÓDIGO'}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
-                      {f.title}
-                    </td>
-                    <td className="py-3 px-4 text-slate-600">{f.box_code || '—'}</td>
-                    <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
-                      {f.location_text || '—'}
-                    </td>
-                    <td className="py-3 px-4">{f.archive_type}</td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      {isVerified ? (
-                        <Badge className="bg-emerald-600 text-white text-[10px]">
-                          <CheckCircle2 className="w-3 h-3 mr-1 inline" /> Conferido
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-[10px] text-amber-700 border-amber-300 bg-amber-50"
-                        >
-                          Pendente
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
-                      {canEdit && (
-                        <Button
-                          size="sm"
-                          variant={isVerified ? 'outline' : 'default'}
-                          onClick={() => handleToggleVerifyFolder(f)}
-                          className={`h-7 px-2.5 text-xs font-semibold ${
-                            isVerified
-                              ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'
-                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                          }`}
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                          {isVerified ? 'Desmarcar' : 'Conferir'}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <tr
+                      key={f.id}
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isVerified ? 'bg-emerald-50/20' : ''
+                      }`}
+                    >
+                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                        {f.code_legacy || 'SEM CÓDIGO'}
+                      </td>
+                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
+                        {f.title}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600">{f.box_code || '—'}</td>
+                      <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
+                        {f.location_text || '—'}
+                      </td>
+                      <td className="py-3 px-4">{f.archive_type}</td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        {isVerified ? (
+                          <Badge className="bg-emerald-600 text-white text-[10px]">
+                            <CheckCircle2 className="w-3 h-3 mr-1 inline" /> Conferido
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] text-amber-700 border-amber-300 bg-amber-50"
+                          >
+                            Pendente
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        {canEdit && (
+                          <Button
+                            size="sm"
+                            variant={isVerified ? 'outline' : 'default'}
+                            onClick={() => handleToggleVerifyFolder(f)}
+                            className={`h-7 px-2.5 text-xs font-semibold ${
+                              isVerified
+                                ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'
+                                : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                            }`}
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                            {isVerified ? 'Desmarcar' : 'Conferir'}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

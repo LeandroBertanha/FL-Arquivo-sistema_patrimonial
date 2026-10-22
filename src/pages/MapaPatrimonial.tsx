@@ -344,28 +344,36 @@ export default function MapaPatrimonial() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Razão Social</th>
-                    <th className="py-3 px-4">CNPJ</th>
-                    <th className="py-3 px-4">Grupo</th>
-                    <th className="py-3 px-4">Capital Social</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredCompanies.map((c) => (
-                    <tr key={c.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 font-semibold text-slate-900">{c.name}</td>
-                      <td className="py-3 px-4 font-mono text-slate-600">{c.cnpj || '—'}</td>
-                      <td className="py-3 px-4 text-slate-600">{c.group_name || '—'}</td>
-                      <td className="py-3 px-4 text-slate-700">
-                        {c.capital ? `R$ ${c.capital.toLocaleString('pt-BR')}` : '—'}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Razão Social</th>
+                      <th className="py-3 px-4 whitespace-nowrap">CNPJ</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Grupo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Capital Social</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredCompanies.map((c) => (
+                      <tr key={c.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                          {c.name}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
+                          {c.cnpj || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {c.group_name || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                          {c.capital ? `R$ ${c.capital.toLocaleString('pt-BR')}` : '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -403,42 +411,48 @@ export default function MapaPatrimonial() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Descrição</th>
-                    <th className="py-3 px-4">Tipo</th>
-                    <th className="py-3 px-4">Endereço</th>
-                    <th className="py-3 px-4">Proprietário</th>
-                    <th className="py-3 px-4">Receita / Pendência</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredProperties.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 font-semibold text-slate-900">{p.description}</td>
-                      <td className="py-3 px-4 text-slate-600">{p.type}</td>
-                      <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
-                        {p.address || '—'}
-                      </td>
-                      <td className="py-3 px-4 text-slate-700">{p.owner_name || '—'}</td>
-                      <td className="py-3 px-4">
-                        {p.generates_revenue ? (
-                          <Badge className="bg-emerald-600 text-white text-[10px]">
-                            R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
-                          </Badge>
-                        ) : p.has_debt ? (
-                          <Badge variant="destructive" className="text-[10px]">
-                            Dívida / Pendência
-                          </Badge>
-                        ) : (
-                          'Regular'
-                        )}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Descrição</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                      <th className="py-3 px-4 min-w-[150px]">Endereço</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Proprietário</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Receita / Pendência</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredProperties.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                          {p.description}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{p.type}</td>
+                        <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
+                          {p.address || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                          {p.owner_name || '—'}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          {p.generates_revenue ? (
+                            <Badge className="bg-emerald-600 text-white text-[10px]">
+                              R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                            </Badge>
+                          ) : p.has_debt ? (
+                            <Badge variant="destructive" className="text-[10px]">
+                              Dívida / Pendência
+                            </Badge>
+                          ) : (
+                            'Regular'
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -474,32 +488,40 @@ export default function MapaPatrimonial() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Placa</th>
-                    <th className="py-3 px-4">Modelo</th>
-                    <th className="py-3 px-4">Ano/Mod</th>
-                    <th className="py-3 px-4">Titular</th>
-                    <th className="py-3 px-4">Pasta</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredVehicles.map((v) => (
-                    <tr key={v.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 font-mono font-bold text-indigo-700">
-                        {v.plate || 'SEM PLACA'}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-slate-900">{v.model}</td>
-                      <td className="py-3 px-4 text-slate-600">{v.year_model || '—'}</td>
-                      <td className="py-3 px-4 text-slate-700">{v.owner_name}</td>
-                      <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                        {v.folder_code || '—'}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Placa</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Modelo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Ano/Mod</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Titular</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Pasta</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredVehicles.map((v) => (
+                      <tr key={v.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-mono font-bold text-indigo-700 whitespace-nowrap">
+                          {v.plate || 'SEM PLACA'}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                          {v.model}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {v.year_model || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                          {v.owner_name}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {v.folder_code || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -536,30 +558,34 @@ export default function MapaPatrimonial() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Caixa</th>
-                    <th className="py-3 px-4">Processo</th>
-                    <th className="py-3 px-4">Tipo</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Advogado</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredProcesses.map((pr) => (
-                    <tr key={pr.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 font-mono font-bold text-amber-800">
-                        {pr.box_code || '—'}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-slate-900">{pr.title}</td>
-                      <td className="py-3 px-4 text-slate-600">{pr.type}</td>
-                      <td className="py-3 px-4">{pr.status}</td>
-                      <td className="py-3 px-4 text-slate-600">{pr.lawyer || '—'}</td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                      <th className="py-3 px-4 min-w-[150px]">Processo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Advogado</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredProcesses.map((pr) => (
+                      <tr key={pr.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-mono font-bold text-amber-800 whitespace-nowrap">
+                          {pr.box_code || '—'}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-slate-900">{pr.title}</td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{pr.type}</td>
+                        <td className="py-3 px-4 whitespace-nowrap">{pr.status}</td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {pr.lawyer || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>

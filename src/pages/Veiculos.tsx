@@ -543,88 +543,90 @@ export default function Veiculos() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Placa</th>
-                    <th className="py-3 px-4">Modelo</th>
-                    <th className="py-3 px-4">Tipo</th>
-                    <th className="py-3 px-4">Ano/Mod</th>
-                    <th className="py-3 px-4">RENAVAN</th>
-                    <th className="py-3 px-4">Titular</th>
-                    <th className="py-3 px-4">Pasta</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredVehicles.map((v) => {
-                    const vehObs = obligations.filter((o) => o.vehicle === v.id)
-                    const hasActiveDebt = vehObs.some((o) => o.is_active_debt)
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[800px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Placa</th>
+                      <th className="py-3 px-4 min-w-[150px]">Modelo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Ano/Mod</th>
+                      <th className="py-3 px-4 whitespace-nowrap">RENAVAN</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Titular</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Pasta</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredVehicles.map((v) => {
+                      const vehObs = obligations.filter((o) => o.vehicle === v.id)
+                      const hasActiveDebt = vehObs.some((o) => o.is_active_debt)
 
-                    return (
-                      <tr key={v.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-3 px-4 font-mono font-bold text-indigo-700 whitespace-nowrap">
-                          {v.plate || 'SEM PLACA'}
-                        </td>
-                        <td className="py-3 px-4 font-semibold text-slate-900">{v.model}</td>
-                        <td className="py-3 px-4 text-slate-600">{v.type || 'Carro'}</td>
-                        <td className="py-3 px-4 text-slate-600">{v.year_model || '—'}</td>
-                        <td className="py-3 px-4 font-mono text-slate-600">{v.renavam || '—'}</td>
-                        <td className="py-3 px-4 text-slate-700">{v.owner_name}</td>
-                        <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                          {v.folder_code || '—'}
-                        </td>
-                        <td className="py-3 px-4 whitespace-nowrap">
-                          {hasActiveDebt ? (
-                            <Badge variant="destructive" className="text-[10px]">
-                              DÍVIDA ATIVA
-                            </Badge>
-                          ) : v.has_pendencies ? (
-                            <Badge
-                              variant="outline"
-                              className="text-[10px] bg-rose-50 text-rose-700 border-rose-200"
-                            >
-                              Pendências
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="outline"
-                              className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
-                            >
-                              Regular
-                            </Badge>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-right whitespace-nowrap">
-                          {canEdit ? (
-                            <div className="flex items-center justify-end gap-1">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => openEditVehicle(v)}
-                                className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                      return (
+                        <tr key={v.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-3 px-4 font-mono font-bold text-indigo-700 whitespace-nowrap">
+                            {v.plate || 'SEM PLACA'}
+                          </td>
+                          <td className="py-3 px-4 font-semibold text-slate-900">{v.model}</td>
+                          <td className="py-3 px-4 text-slate-600">{v.type || 'Carro'}</td>
+                          <td className="py-3 px-4 text-slate-600">{v.year_model || '—'}</td>
+                          <td className="py-3 px-4 font-mono text-slate-600">{v.renavam || '—'}</td>
+                          <td className="py-3 px-4 text-slate-700">{v.owner_name}</td>
+                          <td className="py-3 px-4 font-mono font-bold text-blue-700">
+                            {v.folder_code || '—'}
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            {hasActiveDebt ? (
+                              <Badge variant="destructive" className="text-[10px]">
+                                DÍVIDA ATIVA
+                              </Badge>
+                            ) : v.has_pendencies ? (
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] bg-rose-50 text-rose-700 border-rose-200"
                               >
-                                <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => setDeleteVehTarget(v)}
-                                className="h-7 px-2 text-red-600 hover:text-red-800"
+                                Pendências
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <span className="text-[11px] text-slate-400">Somente leitura</span>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                                Regular
+                              </Badge>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            {canEdit ? (
+                              <div className="flex items-center justify-end gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => openEditVehicle(v)}
+                                  className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                                >
+                                  <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setDeleteVehTarget(v)}
+                                  className="h-7 px-2 text-red-600 hover:text-red-800"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <span className="text-[11px] text-slate-400">Somente leitura</span>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -700,93 +702,95 @@ export default function Veiculos() {
             </div>
           ) : obligationsViewMode === 'table' ? (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Veículo Vinculado</th>
-                    <th className="py-3 px-4">Exercício</th>
-                    <th className="py-3 px-4">Licenciamento</th>
-                    <th className="py-3 px-4">Multas</th>
-                    <th className="py-3 px-4">IPVA</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Observações</th>
-                    <th className="py-3 px-4 text-right">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredObligations.map((ob) => (
-                    <tr key={ob.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4 font-semibold text-slate-900">
-                        {ob.vehicle_name || 'Veículo'}
-                      </td>
-                      <td className="py-3 px-4 font-mono font-bold text-slate-700">{ob.year}</td>
-                      <td className="py-3 px-4 text-slate-700">
-                        {ob.licensing_value
-                          ? `R$ ${ob.licensing_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                          : '—'}
-                      </td>
-                      <td className="py-3 px-4 text-slate-700">
-                        {ob.fines_value
-                          ? `R$ ${ob.fines_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                          : '—'}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-slate-900">
-                        {ob.ipva_value
-                          ? `R$ ${ob.ipva_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                          : 'Sem valor'}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        {ob.is_active_debt ? (
-                          <Badge variant="destructive" className="text-[10px]">
-                            DÍVIDA ATIVA
-                          </Badge>
-                        ) : ob.status === 'Pago' ? (
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
-                          >
-                            Pago
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] bg-amber-50 text-amber-800 border-amber-200"
-                          >
-                            Pendente
-                          </Badge>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-slate-500 max-w-xs truncate">
-                        {ob.notes || '—'}
-                      </td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap">
-                        {canEdit ? (
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => openEditObligation(ob)}
-                              className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                            >
-                              <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => setDeleteObTarget(ob)}
-                              className="h-7 px-2 text-red-600 hover:text-red-800"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <span className="text-[11px] text-slate-400">Somente leitura</span>
-                        )}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[750px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 min-w-[150px]">Veículo Vinculado</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Exercício</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Licenciamento</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Multas</th>
+                      <th className="py-3 px-4 whitespace-nowrap">IPVA</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                      <th className="py-3 px-4 min-w-[150px]">Observações</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredObligations.map((ob) => (
+                      <tr key={ob.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3 px-4 font-semibold text-slate-900">
+                          {ob.vehicle_name || 'Veículo'}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold text-slate-700">{ob.year}</td>
+                        <td className="py-3 px-4 text-slate-700">
+                          {ob.licensing_value
+                            ? `R$ ${ob.licensing_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                            : '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700">
+                          {ob.fines_value
+                            ? `R$ ${ob.fines_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                            : '—'}
+                        </td>
+                        <td className="py-3 px-4 font-bold text-slate-900">
+                          {ob.ipva_value
+                            ? `R$ ${ob.ipva_value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                            : 'Sem valor'}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          {ob.is_active_debt ? (
+                            <Badge variant="destructive" className="text-[10px]">
+                              DÍVIDA ATIVA
+                            </Badge>
+                          ) : ob.status === 'Pago' ? (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                            >
+                              Pago
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] bg-amber-50 text-amber-800 border-amber-200"
+                            >
+                              Pendente
+                            </Badge>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-slate-500 max-w-xs truncate">
+                          {ob.notes || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          {canEdit ? (
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => openEditObligation(ob)}
+                                className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                              >
+                                <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setDeleteObTarget(ob)}
+                                className="h-7 px-2 text-red-600 hover:text-red-800"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-slate-400">Somente leitura</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

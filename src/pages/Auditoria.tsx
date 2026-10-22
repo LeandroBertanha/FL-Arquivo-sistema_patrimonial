@@ -201,36 +201,38 @@ export default function Auditoria() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Data / Hora</th>
-                <th className="py-3 px-4">Usuário</th>
-                <th className="py-3 px-4">Ação</th>
-                <th className="py-3 px-4">Tipo de Registro</th>
-                <th className="py-3 px-4">Detalhes</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-50/70">
-                  <td className="py-3 px-4 text-slate-500 whitespace-nowrap font-mono">
-                    {new Date(log.created).toLocaleString('pt-BR')}
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
-                    {log.user_name || 'Sistema'}
-                  </td>
-                  <td className="py-3 px-4 whitespace-nowrap">{getActionBadge(log.action)}</td>
-                  <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
-                    {log.record_type}
-                  </td>
-                  <td className="py-3 px-4 text-slate-700 max-w-md truncate" title={log.details}>
-                    {log.details || '—'}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Data / Hora</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Usuário</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Ação</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Tipo de Registro</th>
+                  <th className="py-3 px-4 min-w-[200px]">Detalhes</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-slate-50/70">
+                    <td className="py-3 px-4 text-slate-500 whitespace-nowrap font-mono">
+                      {new Date(log.created).toLocaleString('pt-BR')}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                      {log.user_name || 'Sistema'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">{getActionBadge(log.action)}</td>
+                    <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
+                      {log.record_type}
+                    </td>
+                    <td className="py-3 px-4 text-slate-700 max-w-md truncate" title={log.details}>
+                      {log.details || '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

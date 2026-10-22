@@ -229,76 +229,78 @@ export default function CaixaDetalhe() {
 
         {/* Tabela de Itens */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Código Legado</th>
-                <th className="py-3 px-4">Título do Documento / Pasta</th>
-                <th className="py-3 px-4">Titular / Grupo</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Revisão</th>
-                <th className="py-3 px-4 text-right">Ação</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredFolders.length === 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[650px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400">
-                    Nenhum item encontrado nesta caixa.
-                  </td>
+                  <th className="py-3 px-4 whitespace-nowrap">Código Legado</th>
+                  <th className="py-3 px-4 min-w-[200px]">Título do Documento / Pasta</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Titular / Grupo</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Revisão</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
                 </tr>
-              ) : (
-                filteredFolders.map((f) => (
-                  <tr key={f.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
-                      {f.code_legacy || '—'}
-                    </td>
-                    <td
-                      className="py-3 px-4 font-semibold text-slate-900 cursor-pointer hover:underline max-w-md truncate"
-                      onClick={() => navigate(`/pastas/${f.id}`)}
-                    >
-                      {f.title}
-                    </td>
-                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
-                      {f.group_name || '—'}
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${
-                          f.status === 'No Arquivo'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : 'bg-red-50 text-red-700 border-red-200'
-                        }`}
-                      >
-                        {f.status || 'No Arquivo'}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      {f.needs_review && (
-                        <Badge
-                          variant="outline"
-                          className="bg-amber-100 text-amber-800 border-amber-300 text-[10px]"
-                        >
-                          Revisar
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => navigate(`/pastas/${f.id}`)}
-                        className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800"
-                      >
-                        Ver Ficha →
-                      </Button>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredFolders.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-slate-400">
+                      Nenhum item encontrado nesta caixa.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredFolders.map((f) => (
+                    <tr key={f.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                        {f.code_legacy || '—'}
+                      </td>
+                      <td
+                        className="py-3 px-4 font-semibold text-slate-900 cursor-pointer hover:underline max-w-md truncate"
+                        onClick={() => navigate(`/pastas/${f.id}`)}
+                      >
+                        {f.title}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                        {f.group_name || '—'}
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] ${
+                            f.status === 'No Arquivo'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : 'bg-red-50 text-red-700 border-red-200'
+                          }`}
+                        >
+                          {f.status || 'No Arquivo'}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        {f.needs_review && (
+                          <Badge
+                            variant="outline"
+                            className="bg-amber-100 text-amber-800 border-amber-300 text-[10px]"
+                          >
+                            Revisar
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => navigate(`/pastas/${f.id}`)}
+                          className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800"
+                        >
+                          Ver Ficha →
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

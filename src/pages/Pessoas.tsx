@@ -147,26 +147,34 @@ export default function Pessoas() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Nome Completo</th>
-                <th className="py-3 px-4">CPF</th>
-                <th className="py-3 px-4">Grupo / Vínculo</th>
-                <th className="py-3 px-4">Observações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/70">
-                  <td className="py-3 px-4 font-semibold text-slate-900">{p.name}</td>
-                  <td className="py-3 px-4 font-mono text-slate-600">{p.cpf || '—'}</td>
-                  <td className="py-3 px-4 text-blue-700 font-medium">{p.group_name || '—'}</td>
-                  <td className="py-3 px-4 text-slate-500 max-w-xs truncate">{p.notes || '—'}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[650px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Nome Completo</th>
+                  <th className="py-3 px-4 whitespace-nowrap">CPF</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Grupo / Vínculo</th>
+                  <th className="py-3 px-4 min-w-[200px]">Observações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((p) => (
+                  <tr key={p.id} className="hover:bg-slate-50/70">
+                    <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                      {p.name}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
+                      {p.cpf || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-blue-700 font-medium whitespace-nowrap">
+                      {p.group_name || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-500 max-w-xs truncate">{p.notes || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

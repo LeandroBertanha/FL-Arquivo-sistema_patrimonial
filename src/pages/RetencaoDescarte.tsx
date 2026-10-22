@@ -388,53 +388,59 @@ export default function RetencaoDescarte() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Código</th>
-                    <th className="py-3 px-4">Título</th>
-                    <th className="py-3 px-4">Caixa</th>
-                    <th className="py-3 px-4">Arquivo</th>
-                    <th className="py-3 px-4">Prazo</th>
-                    <th className="py-3 px-4">Descarte Previsto</th>
-                    <th className="py-3 px-4 text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredEligible.map((f) => (
-                    <tr key={f.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
-                        {f.code_legacy || 'SEM CÓDIGO'}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
-                        {f.title}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600">{f.box_code || '—'}</td>
-                      <td className="py-3 px-4">{f.archive_type}</td>
-                      <td className="py-3 px-4 text-slate-600">{f.retention_period || '—'}</td>
-                      <td className="py-3 px-4 text-slate-600">
-                        {f.expected_disposal_date
-                          ? new Date(f.expected_disposal_date).toLocaleDateString('pt-BR')
-                          : '—'}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        {canEdit && (
-                          <Button
-                            size="sm"
-                            onClick={() => {
-                              setDisposalFolder(f)
-                              setDisposalModalOpen(true)
-                            }}
-                            className="h-7 px-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 mr-1" /> Solicitar
-                          </Button>
-                        )}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[700px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                      <th className="py-3 px-4 min-w-[180px]">Título</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Arquivo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Prazo</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Descarte Previsto</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredEligible.map((f) => (
+                      <tr key={f.id} className="hover:bg-slate-50/70">
+                        <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {f.code_legacy || 'SEM CÓDIGO'}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
+                          {f.title}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {f.box_code || '—'}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">{f.archive_type}</td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {f.retention_period || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {f.expected_disposal_date
+                            ? new Date(f.expected_disposal_date).toLocaleDateString('pt-BR')
+                            : '—'}
+                        </td>
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          {canEdit && (
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                setDisposalFolder(f)
+                                setDisposalModalOpen(true)
+                              }}
+                              className="h-7 px-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold"
+                            >
+                              <Trash2 className="w-3.5 h-3.5 mr-1" /> Solicitar
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -447,36 +453,38 @@ export default function RetencaoDescarte() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Código</th>
-                    <th className="py-3 px-4">Título</th>
-                    <th className="py-3 px-4">Motivo do Bloqueio</th>
-                    <th className="py-3 px-4">Status do Ciclo</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {blockedFolders.map((f) => (
-                    <tr key={f.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
-                        {f.code_legacy || 'SEM CÓDIGO'}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
-                        {f.title}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600">
-                        {f.disposal_blocked ? 'Bloqueio manual de descarte' : 'Guarda Permanente'}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <Badge variant="outline" className="text-[10px]">
-                          {f.cycle_status || f.archive_type}
-                        </Badge>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                      <th className="py-3 px-4 min-w-[180px]">Título</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Motivo do Bloqueio</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Status do Ciclo</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {blockedFolders.map((f) => (
+                      <tr key={f.id} className="hover:bg-slate-50/70">
+                        <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {f.code_legacy || 'SEM CÓDIGO'}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
+                          {f.title}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {f.disposal_blocked ? 'Bloqueio manual de descarte' : 'Guarda Permanente'}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <Badge variant="outline" className="text-[10px]">
+                            {f.cycle_status || f.archive_type}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -489,70 +497,74 @@ export default function RetencaoDescarte() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Pasta</th>
-                    <th className="py-3 px-4">Código</th>
-                    <th className="py-3 px-4">Solicitante</th>
-                    <th className="py-3 px-4">Justificativa</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Data</th>
-                    <th className="py-3 px-4 text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {requests.map((r) => (
-                    <tr key={r.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
-                        {r.folder_title}
-                      </td>
-                      <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                        {r.folder_code}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600">{r.requester_name || '—'}</td>
-                      <td className="py-3 px-4 text-slate-600 max-w-md truncate">
-                        {r.justification || '—'}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <Badge
-                          variant="outline"
-                          className={`text-[10px] ${
-                            r.status === 'Executado'
-                              ? 'bg-slate-100 text-slate-600 border-slate-200'
-                              : r.status === 'Aprovado'
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                : r.status === 'Rejeitado'
-                                  ? 'bg-red-50 text-red-700 border-red-200'
-                                  : 'bg-amber-50 text-amber-800 border-amber-200'
-                          }`}
-                        >
-                          {r.status}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
-                        {new Date(r.created).toLocaleDateString('pt-BR')}
-                      </td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap">
-                        {canEdit && r.status !== 'Executado' && (
-                          <Button
-                            size="sm"
-                            onClick={() => setDeleteTarget(r)}
-                            className="h-7 px-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 mr-1" /> Executar Descarte
-                          </Button>
-                        )}
-                        {r.status === 'Executado' && (
-                          <span className="text-[10px] text-slate-400 inline-flex items-center gap-1">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Concluído
-                          </span>
-                        )}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[750px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 min-w-[180px]">Pasta</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Código</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Solicitante</th>
+                      <th className="py-3 px-4 min-w-[150px]">Justificativa</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Data</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {requests.map((r) => (
+                      <tr key={r.id} className="hover:bg-slate-50/70">
+                        <td className="py-3 px-4 font-semibold text-slate-900 max-w-xs truncate">
+                          {r.folder_title}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                          {r.folder_code}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                          {r.requester_name || '—'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 max-w-md truncate">
+                          {r.justification || '—'}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] ${
+                              r.status === 'Executado'
+                                ? 'bg-slate-100 text-slate-600 border-slate-200'
+                                : r.status === 'Aprovado'
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  : r.status === 'Rejeitado'
+                                    ? 'bg-red-50 text-red-700 border-red-200'
+                                    : 'bg-amber-50 text-amber-800 border-amber-200'
+                            }`}
+                          >
+                            {r.status}
+                          </Badge>
+                        </td>
+                        <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
+                          {new Date(r.created).toLocaleDateString('pt-BR')}
+                        </td>
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          {canEdit && r.status !== 'Executado' && (
+                            <Button
+                              size="sm"
+                              onClick={() => setDeleteTarget(r)}
+                              className="h-7 px-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold"
+                            >
+                              <Trash2 className="w-3.5 h-3.5 mr-1" /> Executar Descarte
+                            </Button>
+                          )}
+                          {r.status === 'Executado' && (
+                            <span className="text-[10px] text-slate-400 inline-flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Concluído
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>
@@ -565,41 +577,47 @@ export default function RetencaoDescarte() {
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Tipo Documental</th>
-                    <th className="py-3 px-4">Retenção (anos)</th>
-                    <th className="py-3 px-4">Ação Sugerida</th>
-                    <th className="py-3 px-4">Observações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rules.map((r) => (
-                    <tr key={r.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4 font-semibold text-slate-900">{r.doc_type}</td>
-                      <td className="py-3 px-4 text-slate-700 font-bold">{r.retention_years}</td>
-                      <td className="py-3 px-4">
-                        <Badge
-                          variant="outline"
-                          className={`text-[10px] ${
-                            r.suggested_action === 'Descarte'
-                              ? 'bg-rose-50 text-rose-700 border-rose-200'
-                              : r.suggested_action === 'Microfilmagem'
-                                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          }`}
-                        >
-                          {r.suggested_action}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-slate-500 max-w-md truncate">
-                        {r.notes || '—'}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Tipo Documental</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Retenção (anos)</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Ação Sugerida</th>
+                      <th className="py-3 px-4 min-w-[180px]">Observações</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {rules.map((r) => (
+                      <tr key={r.id} className="hover:bg-slate-50/70">
+                        <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                          {r.doc_type}
+                        </td>
+                        <td className="py-3 px-4 text-slate-700 font-bold whitespace-nowrap">
+                          {r.retention_years}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] ${
+                              r.suggested_action === 'Descarte'
+                                ? 'bg-rose-50 text-rose-700 border-rose-200'
+                                : r.suggested_action === 'Microfilmagem'
+                                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            }`}
+                          >
+                            {r.suggested_action}
+                          </Badge>
+                        </td>
+                        <td className="py-3 px-4 text-slate-500 max-w-md truncate">
+                          {r.notes || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </TabsContent>

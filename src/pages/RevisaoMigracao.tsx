@@ -102,7 +102,6 @@ export default function RevisaoMigracao() {
           </p>
         </div>
       </div>
-
       {/* Indicadores */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
@@ -118,7 +117,6 @@ export default function RevisaoMigracao() {
           <p className="text-xl font-bold text-emerald-600 mt-0.5">{totalResolvidos}</p>
         </div>
       </div>
-
       {/* Caixa de Regra do Acervo */}
       <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 space-y-1">
         <p className="font-bold flex items-center gap-1.5 text-amber-950">
@@ -132,7 +130,6 @@ export default function RevisaoMigracao() {
           arquivo.
         </p>
       </div>
-
       {/* Filtros */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div className="relative flex-1 min-w-[220px]">
@@ -163,7 +160,6 @@ export default function RevisaoMigracao() {
           <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="revisao_migracao" />
         </div>
       </div>
-
       {/* Exibição */}
       {loading ? (
         <div className="text-center py-12 text-slate-400 text-xs">
@@ -308,6 +304,7 @@ export default function RevisaoMigracao() {
             </table>
           </div>
         </div>
-      )}    </div>
+      )}{' '}
+    </div>
   )
 }

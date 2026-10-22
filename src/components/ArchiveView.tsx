@@ -228,7 +228,7 @@ export default function ArchiveView({ archiveType, title, description }: Archive
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full min-w-[850px] text-left text-xs">
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
                 <tr>
                   <th className="py-3 px-3 w-8">
@@ -243,14 +243,14 @@ export default function ArchiveView({ archiveType, title, description }: Archive
                       )}
                     </button>
                   </th>
-                  <th className="py-3 px-4">Código Legado</th>
-                  <th className="py-3 px-4">Título da Pasta</th>
-                  <th className="py-3 px-4">Grupo / Titular</th>
-                  <th className="py-3 px-4">Caixa</th>
-                  <th className="py-3 px-4">Localização Física</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Revisão</th>
-                  <th className="py-3 px-4 text-right">Ações</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Código Legado</th>
+                  <th className="py-3 px-4 min-w-[200px]">Título da Pasta</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Grupo / Titular</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                  <th className="py-3 px-4 min-w-[150px]">Localização Física</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Revisão</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">

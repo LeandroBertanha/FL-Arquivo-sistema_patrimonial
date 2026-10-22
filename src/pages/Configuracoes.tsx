@@ -326,59 +326,63 @@ export default function Configuracoes() {
             </div>
 
             <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Nome</th>
-                    <th className="py-3 px-4">E-mail</th>
-                    <th className="py-3 px-4">Perfil de Acesso</th>
-                    <th className="py-3 px-4">Data Cadastro</th>
-                    <th className="py-3 px-4 text-right">Alterar Perfil</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {usersList.map((u) => (
-                    <tr key={u.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-4 font-semibold text-slate-900">
-                        {u.name || 'Sem nome'}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600 font-mono">{u.email}</td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <Badge
-                          variant="outline"
-                          className={`text-[10px] ${
-                            u.role === 'Gestor do Arquivo'
-                              ? 'bg-purple-50 text-purple-700 border-purple-200'
-                              : u.role === 'Auditor'
-                                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                                : u.role === 'Operador'
-                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                  : 'bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          {u.role || 'Consulta'}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-slate-400">
-                        {new Date(u.created).toLocaleDateString('pt-BR')}
-                      </td>
-                      <td className="py-3 px-4 text-right whitespace-nowrap">
-                        <select
-                          className="h-7 text-xs border border-slate-200 rounded px-2 bg-white"
-                          value={u.role || 'Consulta'}
-                          onChange={(e) => handleUpdateUserRole(u.id, e.target.value as Role)}
-                          disabled={u.id === user?.id}
-                        >
-                          <option value="Gestor do Arquivo">Gestor do Arquivo (Admin)</option>
-                          <option value="Operador">Operador</option>
-                          <option value="Consulta">Consulta</option>
-                          <option value="Auditor">Auditor</option>
-                        </select>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                    <tr>
+                      <th className="py-3 px-4 whitespace-nowrap">Nome</th>
+                      <th className="py-3 px-4 whitespace-nowrap">E-mail</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Perfil de Acesso</th>
+                      <th className="py-3 px-4 whitespace-nowrap">Data Cadastro</th>
+                      <th className="py-3 px-4 text-right whitespace-nowrap">Alterar Perfil</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {usersList.map((u) => (
+                      <tr key={u.id} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                          {u.name || 'Sem nome'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 font-mono whitespace-nowrap">
+                          {u.email}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] ${
+                              u.role === 'Gestor do Arquivo'
+                                ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                : u.role === 'Auditor'
+                                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                  : u.role === 'Operador'
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : 'bg-slate-50 text-slate-700'
+                            }`}
+                          >
+                            {u.role || 'Consulta'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
+                          {new Date(u.created).toLocaleDateString('pt-BR')}
+                        </td>
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          <select
+                            className="h-7 text-xs border border-slate-200 rounded px-2 bg-white"
+                            value={u.role || 'Consulta'}
+                            onChange={(e) => handleUpdateUserRole(u.id, e.target.value as Role)}
+                            disabled={u.id === user?.id}
+                          >
+                            <option value="Gestor do Arquivo">Gestor do Arquivo (Admin)</option>
+                            <option value="Operador">Operador</option>
+                            <option value="Consulta">Consulta</option>
+                            <option value="Auditor">Auditor</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </TabsContent>
         )}

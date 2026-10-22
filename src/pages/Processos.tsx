@@ -311,72 +311,78 @@ export default function Processos() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Caixa</th>
-                <th className="py-3 px-4">Título / Processo</th>
-                <th className="py-3 px-4">Número</th>
-                <th className="py-3 px-4">Tipo</th>
-                <th className="py-3 px-4">Advogado</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((pr) => (
-                <tr key={pr.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-amber-800 whitespace-nowrap">
-                    {pr.box_code || '—'}
-                  </td>
-                  <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
-                    {pr.title}
-                  </td>
-                  <td className="py-3 px-4 font-mono text-slate-600">{pr.number || '—'}</td>
-                  <td className="py-3 px-4 text-slate-600">{pr.type}</td>
-                  <td className="py-3 px-4 text-slate-600">{pr.lawyer || '—'}</td>
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <Badge
-                      variant="outline"
-                      className={`text-[10px] ${
-                        pr.status === 'Ativo'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          : pr.status === 'Suspenso'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200'
-                            : 'bg-slate-100 text-slate-700'
-                      }`}
-                    >
-                      {pr.status}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 text-right whitespace-nowrap">
-                    {canEdit ? (
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openEdit(pr)}
-                          className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setDeleteTarget(pr)}
-                          className="h-7 px-2 text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-slate-400">Somente leitura</span>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Caixa</th>
+                  <th className="py-3 px-4 min-w-[180px]">Título / Processo</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Número</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Advogado</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((pr) => (
+                  <tr key={pr.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-amber-800 whitespace-nowrap">
+                      {pr.box_code || '—'}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
+                      {pr.title}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-slate-600 whitespace-nowrap">
+                      {pr.number || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{pr.type}</td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                      {pr.lawyer || '—'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${
+                          pr.status === 'Ativo'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : pr.status === 'Suspenso'
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : 'bg-slate-100 text-slate-700'
+                        }`}
+                      >
+                        {pr.status}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      {canEdit ? (
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openEdit(pr)}
+                            className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                          >
+                            <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setDeleteTarget(pr)}
+                            className="h-7 px-2 text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">Somente leitura</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

@@ -173,40 +173,48 @@ export default function Imoveis() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Descrição</th>
-                <th className="py-3 px-4">Tipo</th>
-                <th className="py-3 px-4">Endereço</th>
-                <th className="py-3 px-4">Proprietário / Titular</th>
-                <th className="py-3 px-4">Matrícula / Registro</th>
-                <th className="py-3 px-4">Receita / Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/70">
-                  <td className="py-3 px-4 font-semibold text-slate-900">{p.description}</td>
-                  <td className="py-3 px-4 text-slate-600">{p.type}</td>
-                  <td className="py-3 px-4 text-slate-600 max-w-xs truncate">{p.address || '—'}</td>
-                  <td className="py-3 px-4 text-slate-700">{p.owner_name || '—'}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-blue-700">
-                    {p.registry_number || 'CX N8'}
-                  </td>
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    {p.generates_revenue ? (
-                      <Badge className="bg-emerald-600 text-white text-[10px]">
-                        R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
-                      </Badge>
-                    ) : (
-                      <span className="text-slate-400">Regular</span>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Descrição</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Tipo</th>
+                  <th className="py-3 px-4 min-w-[150px]">Endereço</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Proprietário / Titular</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Matrícula / Registro</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Receita / Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filtered.map((p) => (
+                  <tr key={p.id} className="hover:bg-slate-50/70">
+                    <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
+                      {p.description}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">{p.type}</td>
+                    <td className="py-3 px-4 text-slate-600 max-w-xs truncate">
+                      {p.address || '—'}
+                    </td>
+                    <td className="py-3 px-4 text-slate-700 whitespace-nowrap">
+                      {p.owner_name || '—'}
+                    </td>
+                    <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                      {p.registry_number || 'CX N8'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      {p.generates_revenue ? (
+                        <Badge className="bg-emerald-600 text-white text-[10px]">
+                          R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                        </Badge>
+                      ) : (
+                        <span className="text-slate-400">Regular</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

@@ -177,7 +177,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
   )
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] flex">
+    <div className="min-h-screen bg-[#F8F9FB] flex w-full">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-[260px] bg-white border-r border-slate-200 shrink-0 h-screen sticky top-0">
         {/* Logo */}
@@ -338,7 +338,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto min-w-0">{children || <Outlet />}</main>
+        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto min-w-0 overflow-x-auto">
+          {children || <Outlet />}
+        </main>
 
         {/* Footer */}
         <footer className="py-4 px-8 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">

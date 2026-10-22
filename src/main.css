@@ -8,6 +8,13 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  body {
+    overflow-x: auto;
+    overflow-y: auto;
+    min-height: 100%;
+  }
+
   :root {
     /* Change the colors to match the design system */
     --background: 0 0% 100%;
