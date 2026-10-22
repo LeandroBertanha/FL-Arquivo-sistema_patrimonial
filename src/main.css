@@ -295,4 +295,19 @@
     filter: brightness(0) invert(1);
     -webkit-filter: brightness(0) invert(1);
   }
+
+  /* Mantém botões legados do Skip alinhados ao azul original do logo. */
+  button[class~='bg-blue-600'],
+  a[class~='bg-blue-600'],
+  button[class~='bg-[#1E2749]'],
+  a[class~='bg-[#1E2749]'] {
+    background-color: #20254d !important;
+  }
+
+  button[class~='hover:bg-blue-700']:hover,
+  a[class~='hover:bg-blue-700']:hover,
+  button[class~='hover:bg-[#151D38]']:hover,
+  a[class~='hover:bg-[#151D38]']:hover {
+    background-color: #1c2145 !important;
+  }
 }
