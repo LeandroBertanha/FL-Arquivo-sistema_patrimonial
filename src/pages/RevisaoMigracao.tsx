@@ -237,76 +237,77 @@ export default function RevisaoMigracao() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Código Original</th>
-                <th className="py-3 px-4">Conteúdo Identificado</th>
-                <th className="py-3 px-4">Tipo Inconsistência</th>
-                <th className="py-3 px-4">Planilha Origem</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Ação</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredIssues.map((iss) => {
-                const isResolved = iss.status === 'Resolvida'
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[760px] text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="py-3 px-4 whitespace-nowrap">Código Original</th>
+                  <th className="py-3 px-4 min-w-[200px]">Conteúdo Identificado</th>
+                  <th className="py-3 px-4 min-w-[160px]">Tipo Inconsistência</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Planilha Origem</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ação</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredIssues.map((iss) => {
+                  const isResolved = iss.status === 'Resolvida'
 
-                return (
-                  <tr
-                    key={iss.id}
-                    className={`hover:bg-slate-50/70 transition-colors ${
-                      isResolved ? 'bg-emerald-50/20' : ''
-                    }`}
-                  >
-                    <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
-                      {iss.code_legacy || 'SEM CÓDIGO'}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm truncate">
-                      {iss.original_content}
-                    </td>
-                    <td className="py-3 px-4 text-slate-600">
-                      {iss.issue_type || iss.description}
-                    </td>
-                    <td className="py-3 px-4 text-slate-600">
-                      {iss.origin_sheet || '—'} (L{iss.origin_row || '—'})
-                    </td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${
-                          isResolved
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                            : 'bg-amber-50 text-amber-800 border-amber-300'
-                        }`}
-                      >
-                        {isResolved ? 'Homologado' : 'Pendente'}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 text-right whitespace-nowrap">
-                      {canEdit && (
-                        <Button
-                          size="sm"
-                          variant={isResolved ? 'outline' : 'default'}
-                          onClick={() => handleResolveIssue(iss)}
-                          className={`h-7 px-2.5 text-xs font-semibold ${
+                  return (
+                    <tr
+                      key={iss.id}
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isResolved ? 'bg-emerald-50/20' : ''
+                      }`}
+                    >
+                      <td className="py-3 px-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                        {iss.code_legacy || 'SEM CÓDIGO'}
+                      </td>
+                      <td className="py-3 px-4 font-semibold text-slate-900 max-w-sm">
+                        {iss.original_content}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600">
+                        {iss.issue_type || iss.description}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                        {iss.origin_sheet || '—'} (Linha {iss.origin_row || '—'})
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] ${
                             isResolved
-                              ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'
-                              : 'bg-amber-600 hover:bg-amber-700 text-white'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                              : 'bg-amber-50 text-amber-800 border-amber-300'
                           }`}
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                          {isResolved ? 'Reabrir' : 'Homologar'}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                          {isResolved ? 'Homologado' : 'Pendente'}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        {canEdit && (
+                          <Button
+                            size="sm"
+                            variant={isResolved ? 'outline' : 'default'}
+                            onClick={() => handleResolveIssue(iss)}
+                            className={`h-7 px-2.5 text-xs font-semibold ${
+                              isResolved
+                                ? 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'
+                                : 'bg-amber-600 hover:bg-amber-700 text-white'
+                            }`}
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                            {isResolved ? 'Reabrir' : 'Homologar'}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-      )}
-    </div>
+      )}    </div>
   )
 }
