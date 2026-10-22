@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom'
 import {
   LayoutDashboard,
   Search,
@@ -118,7 +118,7 @@ const navGroups: NavGroup[] = [
   },
 ]
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children?: React.ReactNode }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -339,7 +339,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">{children}</main>
+        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">{children || <Outlet />}</main>
 
         {/* Footer */}
         <footer className="py-4 px-8 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
