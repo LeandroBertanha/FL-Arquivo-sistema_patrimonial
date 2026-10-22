@@ -193,12 +193,12 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-[268px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52] shrink-0 h-screen sticky top-0">
         {/* Logo Grupo VL */}
-        <div className="h-20 flex items-center gap-3 px-5 border-b border-[#1F2A52] bg-[#0E152D]">
-          <div className="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center shrink-0">
+        <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
+          <div className="bg-white px-2.5 py-1.5 rounded-xl shadow-md border border-white/20 flex items-center justify-center shrink-0">
             <img
-              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
               alt="Grupo VL"
-              className="h-9 w-auto max-w-[56px] object-contain"
+              className="h-12 w-auto max-w-[85px] object-contain drop-shadow-xs"
             />
           </div>
           <div className="min-w-0">
@@ -230,12 +230,12 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           side="left"
           className="p-0 w-[280px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52]"
         >
-          <div className="h-20 flex items-center gap-3 px-5 border-b border-[#1F2A52] bg-[#0E152D]">
-            <div className="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center shrink-0">
+          <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
+            <div className="bg-white px-2.5 py-1.5 rounded-xl shadow-md border border-white/20 flex items-center justify-center shrink-0">
               <img
-                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
                 alt="Grupo VL"
-                className="h-8 w-auto max-w-[50px] object-contain"
+                className="h-12 w-auto max-w-[85px] object-contain drop-shadow-xs"
               />
             </div>
             <div>

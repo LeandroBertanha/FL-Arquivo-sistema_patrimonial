@@ -57,11 +57,11 @@ export default function Signup() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg border-slate-200">
         <CardHeader className="text-center space-y-3 pb-6">
-          <div className="mx-auto bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center w-fit">
+          <div className="mx-auto bg-white px-5 py-3 rounded-2xl shadow-md border border-slate-200/80 flex items-center justify-center w-fit">
             <img
-              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
               alt="Grupo VL"
-              className="h-14 w-auto max-w-[120px] object-contain"
+              className="h-20 w-auto max-w-[180px] object-contain drop-shadow-xs"
             />
           </div>
           <CardTitle className="text-2xl font-bold text-[#1E2749]">Criar Conta</CardTitle>

@@ -94,11 +94,11 @@ export default function Apresentacao() {
       <header className="border-b border-slate-200/80 bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
           <div className="flex items-center gap-3.5">
-            <div className="bg-white p-1.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-center">
+            <div className="bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center">
               <img
-                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
                 alt="Grupo VL"
-                className="h-10 sm:h-11 w-auto max-w-[65px] object-contain"
+                className="h-12 sm:h-14 w-auto max-w-[100px] object-contain"
               />
             </div>
             <div>
@@ -397,12 +397,14 @@ export default function Apresentacao() {
       {/* Footer discreto */}
       <footer className="border-t border-slate-200 bg-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div className="flex items-center gap-2.5">
-            <img
-              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
-              alt="Grupo VL"
-              className="h-5 w-auto object-contain"
-            />
+          <div className="flex items-center gap-3">
+            <div className="bg-slate-100 px-2 py-1 rounded-md border border-slate-200 flex items-center justify-center">
+              <img
+                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+                alt="Grupo VL"
+                className="h-8 w-auto max-w-[65px] object-contain"
+              />
+            </div>
             <span className="font-semibold text-[#1E2749]">Gestão Patrimonial</span>
             <span>— Grupo VL © 2026</span>
           </div>

@@ -34,6 +34,9 @@ export default function Imoveis() {
   const [search, setSearch] = useState('')
 
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('imoveis', 'cards'))
+  const [statusFilter, setStatusFilter] = useState<
+    'todos' | 'Ativo' | 'Vendido' | 'Em Transferência' | 'Em Reforma'
+  >('todos')
 
   // Modal Criar / Editar Imóvel
   const [modalOpen, setModalOpen] = useState(false)
@@ -43,6 +46,7 @@ export default function Imoveis() {
   const [ownerName, setOwnerName] = useState('CAPANNONE')
   const [registryNumber, setRegistryNumber] = useState('CX N8')
   const [type, setType] = useState<Property['type']>('Conjunto Comercial')
+  const [status, setStatus] = useState<NonNullable<Property['status']>>('Ativo')
   const [generatesRevenue, setGeneratesRevenue] = useState(false)
   const [revenueValue, setRevenueValue] = useState(0)
   const [notes, setNotes] = useState('')
@@ -74,6 +78,7 @@ export default function Imoveis() {
     setOwnerName('CAPANNONE')
     setRegistryNumber('CX N8')
     setType('Conjunto Comercial')
+    setStatus('Ativo')
     setGeneratesRevenue(false)
     setRevenueValue(0)
     setNotes('')
@@ -87,6 +92,7 @@ export default function Imoveis() {
     setOwnerName(p.owner_name || 'CAPANNONE')
     setRegistryNumber(p.registry_number || 'CX N8')
     setType(p.type || 'Conjunto Comercial')
+    setStatus(p.status || 'Ativo')
     setGeneratesRevenue(!!p.generates_revenue)
     setRevenueValue(p.revenue_value || 0)
     setNotes(p.notes || '')
@@ -103,6 +109,7 @@ export default function Imoveis() {
         owner_name: ownerName,
         registry_number: registryNumber,
         type,
+        status,
         generates_revenue: generatesRevenue,
         revenue_value: Number(revenueValue),
         notes,
@@ -135,14 +142,23 @@ export default function Imoveis() {
 
   const filtered = properties.filter((p) => {
     const q = search.toLowerCase()
-    return (
+    const matchQuery =
       !q ||
       p.description?.toLowerCase().includes(q) ||
       p.address?.toLowerCase().includes(q) ||
       p.owner_name?.toLowerCase().includes(q) ||
       p.registry_number?.toLowerCase().includes(q)
-    )
+
+    const propStatus = p.status || 'Ativo'
+    const matchStatus = statusFilter === 'todos' || propStatus === statusFilter
+
+    return matchQuery && matchStatus
   })
+
+  const countAtivos = properties.filter((p) => (p.status || 'Ativo') === 'Ativo').length
+  const countVendidos = properties.filter((p) => p.status === 'Vendido').length
+  const countTransferencia = properties.filter((p) => p.status === 'Em Transferência').length
+  const countReforma = properties.filter((p) => p.status === 'Em Reforma').length
 
   return (
     <div className="space-y-6">
@@ -166,8 +182,8 @@ export default function Imoveis() {
         )}
       </div>
 
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
-        <div className="relative flex-1">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[220px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
             placeholder="Buscar por descrição, endereço, proprietário ou matrícula..."
@@ -176,8 +192,24 @@ export default function Imoveis() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <span className="text-xs text-slate-400 font-medium">{filtered.length} imóvel(is)</span>
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="imoveis" />
+
+        <div className="flex items-center gap-2">
+          {/* Filtro por Status do Imóvel */}
+          <select
+            className="h-9 border border-slate-200 rounded-md px-3 bg-white text-xs text-slate-700"
+            value={statusFilter}
+            onChange={(e: any) => setStatusFilter(e.target.value)}
+          >
+            <option value="todos">Todos Status ({properties.length})</option>
+            <option value="Ativo">Ativos ({countAtivos})</option>
+            <option value="Vendido">Vendidos ({countVendidos})</option>
+            <option value="Em Transferência">Em Transferência ({countTransferencia})</option>
+            <option value="Em Reforma">Em Reforma ({countReforma})</option>
+          </select>
+
+          <span className="text-xs text-slate-400 font-medium">{filtered.length} imóvel(is)</span>
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="imoveis" />
+        </div>
       </div>
 
       {loading ? (
@@ -194,15 +226,31 @@ export default function Imoveis() {
                 <div className="flex items-start justify-between">
                   <Badge
                     variant="outline"
-                    className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                    className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200 font-medium"
                   >
                     {p.type}
                   </Badge>
-                  {p.generates_revenue && (
-                    <Badge className="bg-emerald-600 text-white text-[10px]">
-                      Receita: R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                  <div className="flex items-center gap-1.5">
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] ${
+                        (p.status || 'Ativo') === 'Ativo'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : p.status === 'Vendido'
+                            ? 'bg-slate-100 text-slate-700 border-slate-200'
+                            : p.status === 'Em Reforma'
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : 'bg-blue-50 text-blue-700 border-blue-200'
+                      }`}
+                    >
+                      {p.status || 'Ativo'}
                     </Badge>
-                  )}
+                    {p.generates_revenue && (
+                      <Badge className="bg-emerald-600 text-white text-[10px]">
+                        R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <CardTitle className="text-sm font-bold text-slate-900 mt-2">
                   {p.description}
@@ -265,7 +313,8 @@ export default function Imoveis() {
                   <th className="py-3 px-4 min-w-[150px]">Endereço</th>
                   <th className="py-3 px-4 whitespace-nowrap">Proprietário / Titular</th>
                   <th className="py-3 px-4 whitespace-nowrap">Matrícula / Registro</th>
-                  <th className="py-3 px-4 whitespace-nowrap">Receita / Status</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Receita</th>
+                  <th className="py-3 px-4 whitespace-nowrap">Status</th>
                   <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                 </tr>
               </thead>
@@ -291,8 +340,24 @@ export default function Imoveis() {
                           R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
                         </Badge>
                       ) : (
-                        <span className="text-slate-400">Regular</span>
+                        <span className="text-slate-400 text-[11px]">—</span>
                       )}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${
+                          (p.status || 'Ativo') === 'Ativo'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : p.status === 'Vendido'
+                              ? 'bg-slate-100 text-slate-700 border-slate-200'
+                              : p.status === 'Em Reforma'
+                                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                                : 'bg-blue-50 text-blue-700 border-blue-200'
+                        }`}
+                      >
+                        {p.status || 'Ativo'}
+                      </Badge>
                     </td>
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       {canEdit ? (
@@ -383,7 +448,7 @@ export default function Imoveis() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1">
                 <label className="font-semibold text-slate-700">Matrícula / Caixa</label>
                 <Input
@@ -392,6 +457,19 @@ export default function Imoveis() {
                   placeholder="Ex: CX N8"
                   className="text-xs h-9 font-mono"
                 />
+              </div>
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Status</label>
+                <select
+                  className="w-full h-9 border border-slate-200 rounded-md px-3 bg-white text-xs"
+                  value={status}
+                  onChange={(e: any) => setStatus(e.target.value)}
+                >
+                  <option value="Ativo">Ativo</option>
+                  <option value="Vendido">Vendido</option>
+                  <option value="Em Transferência">Em Transferência</option>
+                  <option value="Em Reforma">Em Reforma</option>
+                </select>
               </div>
               <div className="space-y-1">
                 <label className="font-semibold text-slate-700">Receita Mensal (R$)</label>

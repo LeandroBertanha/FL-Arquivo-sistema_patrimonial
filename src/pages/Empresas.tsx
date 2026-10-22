@@ -34,6 +34,7 @@ export default function Empresas() {
   const [search, setSearch] = useState('')
 
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('empresas', 'cards'))
+  const [statusFilter, setStatusFilter] = useState<'todos' | 'Ativa' | 'Inativa'>('todos')
 
   // Modal Empresa (Criar / Editar)
   const [modalOpen, setModalOpen] = useState(false)
@@ -42,6 +43,7 @@ export default function Empresas() {
   const [tradeName, setTradeName] = useState('')
   const [cnpj, setCnpj] = useState('')
   const [groupName, setGroupName] = useState('')
+  const [status, setStatus] = useState<'Ativa' | 'Inativa'>('Ativa')
   const [capital, setCapital] = useState(0)
   const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
@@ -71,6 +73,7 @@ export default function Empresas() {
     setTradeName('')
     setCnpj('')
     setGroupName('GRUPO VL')
+    setStatus('Ativa')
     setCapital(0)
     setNotes('')
     setModalOpen(true)
@@ -82,6 +85,7 @@ export default function Empresas() {
     setTradeName(c.trade_name || '')
     setCnpj(c.cnpj || '')
     setGroupName(c.group_name || 'GRUPO VL')
+    setStatus(c.status || 'Ativa')
     setCapital(c.capital || 0)
     setNotes(c.notes || '')
     setModalOpen(true)
@@ -98,7 +102,7 @@ export default function Empresas() {
         group_name: groupName,
         capital: Number(capital),
         notes,
-        status: 'Ativa',
+        status,
       }
 
       if (editingCompany) {
@@ -128,14 +132,21 @@ export default function Empresas() {
 
   const filtered = companies.filter((c) => {
     const q = search.toLowerCase()
-    return (
+    const matchQuery =
       !q ||
       c.name?.toLowerCase().includes(q) ||
       c.trade_name?.toLowerCase().includes(q) ||
       c.cnpj?.toLowerCase().includes(q) ||
       c.group_name?.toLowerCase().includes(q)
-    )
+
+    const companyStatus = c.status || 'Ativa'
+    const matchStatus = statusFilter === 'todos' || companyStatus === statusFilter
+
+    return matchQuery && matchStatus
   })
+
+  const countAtivas = companies.filter((c) => (c.status || 'Ativa') === 'Ativa').length
+  const countInativas = companies.filter((c) => c.status === 'Inativa').length
 
   return (
     <div className="space-y-6">
@@ -159,8 +170,8 @@ export default function Empresas() {
         )}
       </div>
 
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
-        <div className="relative flex-1">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[220px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
             placeholder="Buscar empresa por razão social, nome fantasia, CNPJ ou grupo..."
@@ -169,8 +180,22 @@ export default function Empresas() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <span className="text-xs text-slate-400 font-medium">{filtered.length} empresa(s)</span>
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="empresas" />
+
+        <div className="flex items-center gap-2">
+          {/* Filtro por Status da Empresa */}
+          <select
+            className="h-9 border border-slate-200 rounded-md px-3 bg-white text-xs text-slate-700"
+            value={statusFilter}
+            onChange={(e: any) => setStatusFilter(e.target.value)}
+          >
+            <option value="todos">Todos Status ({companies.length})</option>
+            <option value="Ativa">Ativas ({countAtivas})</option>
+            <option value="Inativa">Inativas ({countInativas})</option>
+          </select>
+
+          <span className="text-xs text-slate-400 font-medium">{filtered.length} empresa(s)</span>
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="empresas" />
+        </div>
       </div>
 
       {loading ? (
@@ -196,18 +221,30 @@ export default function Empresas() {
                       {c.name}
                     </CardTitle>
                   </div>
-                  {c.has_pendencies ? (
-                    <Badge variant="destructive" className="text-[10px]">
-                      Pendência
-                    </Badge>
-                  ) : (
+                  <div className="flex items-center gap-1.5">
                     <Badge
                       variant="outline"
-                      className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                      className={`text-[10px] ${
+                        (c.status || 'Ativa') === 'Ativa'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-slate-100 text-slate-600 border-slate-200'
+                      }`}
                     >
-                      Regular
+                      {c.status || 'Ativa'}
                     </Badge>
-                  )}
+                    {c.has_pendencies ? (
+                      <Badge variant="destructive" className="text-[10px]">
+                        Pendência
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                      >
+                        Regular
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-4 pt-1 space-y-2 text-xs">
@@ -289,18 +326,23 @@ export default function Empresas() {
                       {c.capital ? `R$ ${c.capital.toLocaleString('pt-BR')}` : '—'}
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap">
-                      {c.has_pendencies ? (
-                        <Badge variant="destructive" className="text-[10px]">
-                          Pendência
-                        </Badge>
-                      ) : (
+                      <div className="flex items-center gap-1.5">
                         <Badge
                           variant="outline"
-                          className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
+                          className={`text-[10px] ${
+                            (c.status || 'Ativa') === 'Ativa'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : 'bg-slate-100 text-slate-600 border-slate-200'
+                          }`}
                         >
-                          Regular
+                          {c.status || 'Ativa'}
                         </Badge>
-                      )}
+                        {c.has_pendencies && (
+                          <Badge variant="destructive" className="text-[10px]">
+                            Pendência
+                          </Badge>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3 px-4 text-right whitespace-nowrap">
                       {canEdit ? (
@@ -385,14 +427,27 @@ export default function Empresas() {
                 />
               </div>
             </div>
-            <div className="space-y-1">
-              <label className="font-semibold text-slate-700">Capital Social (R$)</label>
-              <Input
-                type="number"
-                value={capital}
-                onChange={(e) => setCapital(Number(e.target.value))}
-                className="text-xs h-9"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Status</label>
+                <select
+                  className="w-full h-9 border border-slate-200 rounded-md px-3 bg-white text-xs"
+                  value={status}
+                  onChange={(e: any) => setStatus(e.target.value)}
+                >
+                  <option value="Ativa">Ativa</option>
+                  <option value="Inativa">Inativa</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Capital Social (R$)</label>
+                <Input
+                  type="number"
+                  value={capital}
+                  onChange={(e) => setCapital(Number(e.target.value))}
+                  className="text-xs h-9"
+                />
+              </div>
             </div>
             <div className="space-y-1">
               <label className="font-semibold text-slate-700">Observações</label>
