@@ -38,15 +38,19 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-lg border-slate-200">
-        <CardHeader className="text-center space-y-2 pb-6">
-          <div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md">
-            <Folders className="w-6 h-6" />
+    <div className="min-h-screen bg-[#F0F2F7] flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-slate-200 bg-white">
+        <CardHeader className="text-center space-y-3 pb-6">
+          <div className="mx-auto bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center w-fit">
+            <img
+              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+              alt="Grupo VL"
+              className="h-16 w-auto max-w-[140px] object-contain"
+            />
           </div>
-          <CardTitle className="text-2xl font-bold text-slate-900">FL Arquivos</CardTitle>
+          <CardTitle className="text-2xl font-bold text-[#1E2749]">Gestão Patrimonial</CardTitle>
           <CardDescription className="text-sm text-slate-500">
-            Acesso ao sistema de gestão física, digital e patrimonial
+            Acesso ao sistema corporativo de gestão física, digital e patrimonial do Grupo VL
           </CardDescription>
         </CardHeader>
 
@@ -77,7 +81,10 @@ export default function Login() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-slate-700">Senha</label>
-                <Link to="/forgot-password" className="text-xs text-blue-600 hover:underline">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-[#1E2749] hover:underline font-medium"
+                >
                   Esqueceu a senha?
                 </Link>
               </div>
@@ -94,15 +101,15 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="p-3 bg-blue-50/70 rounded-lg text-xs text-blue-900 border border-blue-100 flex flex-col gap-1">
-              <span className="font-semibold text-blue-800">
+            <div className="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 border border-slate-200 flex flex-col gap-1">
+              <span className="font-semibold text-[#1E2749]">
                 Acesso Demonstração Administrador:
               </span>
               <span>
-                E-mail: <strong className="text-blue-950">admin@flarquivos.com</strong>
+                E-mail: <strong className="text-slate-900">admin@flarquivos.com</strong>
               </span>
               <span>
-                Senha: <strong className="text-blue-950">Skip@Pass</strong>
+                Senha: <strong className="text-slate-900">Skip@Pass</strong>
               </span>
             </div>
           </CardContent>
@@ -111,7 +118,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 font-medium"
+              className="w-full bg-[#1E2749] hover:bg-[#151D38] text-white font-medium shadow-md shadow-[#1E2749]/20"
             >
               {loading ? (
                 'Entrando...'
@@ -124,7 +131,7 @@ export default function Login() {
             </Button>
             <div className="text-center text-xs text-slate-500">
               Não tem conta?{' '}
-              <Link to="/signup" className="text-blue-600 font-semibold hover:underline">
+              <Link to="/signup" className="text-[#1E2749] font-semibold hover:underline">
                 Criar conta
               </Link>
             </div>

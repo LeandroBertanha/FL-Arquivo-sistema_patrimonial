@@ -311,10 +311,10 @@ export default function Configuracoes() {
           <TabsContent value="usuarios" className="pt-2 space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">Usuários do FL Arquivos</h3>
+                <h3 className="text-sm font-bold text-slate-900">Usuários do Sistema</h3>
                 <p className="text-xs text-slate-500">
-                  Defina os níveis de permissão: Gestor do Arquivo, Operador, Consulta ou Auditor
-                </p>
+                  Gerencie operadores, gestores e administradores da Gestão Patrimonial
+                </p>{' '}
               </div>
               <Button
                 size="sm"

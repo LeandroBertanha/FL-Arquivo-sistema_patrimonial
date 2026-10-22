@@ -164,13 +164,27 @@ export const companiesService = {
   },
   async create(data: Partial<Company>) {
     const rec = await pb.collection('companies').create<Company>(data)
-    await logAudit('CRIACAO_EMPRESA', 'company', rec.id, `Empresa criada: ${rec.name}`)
+    await logAudit('CRIACAO_EMPRESA', 'companies', rec.id, `Empresa criada: ${rec.name}`)
     return rec
   },
   async update(id: string, data: Partial<Company>) {
     const rec = await pb.collection('companies').update<Company>(id, data)
-    await logAudit('EDICAO_EMPRESA', 'company', id, `Empresa atualizada: ${rec.name}`)
+    await logAudit('EDICAO_EMPRESA', 'companies', id, `Empresa atualizada: ${rec.name}`)
     return rec
+  },
+  async delete(id: string) {
+    const old = await pb
+      .collection('companies')
+      .getOne<Company>(id)
+      .catch(() => null)
+    await pb.collection('companies').delete(id)
+    await logAudit(
+      'EXCLUSAO_EMPRESA',
+      'companies',
+      id,
+      `Empresa excluída: ${old?.name || id} (CNPJ: ${old?.cnpj || 'não informado'})`,
+    )
+    return true
   },
 }
 
@@ -184,13 +198,27 @@ export const peopleService = {
   },
   async create(data: Partial<Person>) {
     const rec = await pb.collection('people').create<Person>(data)
-    await logAudit('CRIACAO_PESSOA', 'person', rec.id, `Pessoa cadastrada: ${rec.name}`)
+    await logAudit('CRIACAO_PESSOA', 'people', rec.id, `Pessoa cadastrada: ${rec.name}`)
     return rec
   },
   async update(id: string, data: Partial<Person>) {
     const rec = await pb.collection('people').update<Person>(id, data)
-    await logAudit('EDICAO_PESSOA', 'person', id, `Pessoa atualizada: ${rec.name}`)
+    await logAudit('EDICAO_PESSOA', 'people', id, `Pessoa atualizada: ${rec.name}`)
     return rec
+  },
+  async delete(id: string) {
+    const old = await pb
+      .collection('people')
+      .getOne<Person>(id)
+      .catch(() => null)
+    await pb.collection('people').delete(id)
+    await logAudit(
+      'EXCLUSAO_PESSOA',
+      'people',
+      id,
+      `Pessoa excluída: ${old?.name || id} (CPF: ${old?.cpf || 'não informado'})`,
+    )
+    return true
   },
 }
 
@@ -204,13 +232,27 @@ export const propertiesService = {
   },
   async create(data: Partial<Property>) {
     const rec = await pb.collection('properties').create<Property>(data)
-    await logAudit('CRIACAO_IMOVEL', 'property', rec.id, `Imóvel cadastrado: ${rec.description}`)
+    await logAudit('CRIACAO_IMOVEL', 'properties', rec.id, `Imóvel cadastrado: ${rec.description}`)
     return rec
   },
   async update(id: string, data: Partial<Property>) {
     const rec = await pb.collection('properties').update<Property>(id, data)
-    await logAudit('EDICAO_IMOVEL', 'property', id, `Imóvel atualizado: ${rec.description}`)
+    await logAudit('EDICAO_IMOVEL', 'properties', id, `Imóvel atualizado: ${rec.description}`)
     return rec
+  },
+  async delete(id: string) {
+    const old = await pb
+      .collection('properties')
+      .getOne<Property>(id)
+      .catch(() => null)
+    await pb.collection('properties').delete(id)
+    await logAudit(
+      'EXCLUSAO_IMOVEL',
+      'properties',
+      id,
+      `Imóvel excluído: ${old?.description || id} (${old?.address || 'sem endereço'})`,
+    )
+    return true
   },
 }
 

@@ -138,11 +138,15 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
     navigate(`/search?q=${encodeURIComponent(code)}`)
   }
 
-  const renderNavLinks = () => (
+  const renderNavLinks = (isDark = true) => (
     <div className="space-y-6">
       {navGroups.map((group) => (
         <div key={group.label} className="space-y-1">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <p
+            className={`px-3 text-[11px] font-bold tracking-wider uppercase ${
+              isDark ? 'text-slate-400/80' : 'text-slate-400'
+            }`}
+          >
             {group.label}
           </p>
           {group.items.map((item) => {
@@ -153,18 +157,26 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                 key={item.href}
                 to={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all ${
                   isActive
-                    ? 'bg-blue-50 text-blue-700 font-semibold shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    ? isDark
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm'
+                      : 'bg-[#1E2749] text-white font-semibold shadow-xs'
+                    : isDark
+                      ? 'text-slate-300 hover:bg-white/10 hover:text-white'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <Icon
+                    className={`w-4 h-4 ${
+                      isActive ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-500'
+                    }`}
+                  />
                   <span>{item.title}</span>
                 </div>
                 {item.badge && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
                     {item.badge}
                   </span>
                 )}
@@ -179,28 +191,34 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#F8F9FB] flex w-full">
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex flex-col w-[260px] bg-white border-r border-slate-200 shrink-0 h-screen sticky top-0">
-        {/* Logo */}
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-100">
-          <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-xs">
-            <Folders className="w-5 h-5" />
+      <aside className="hidden lg:flex flex-col w-[268px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52] shrink-0 h-screen sticky top-0">
+        {/* Logo Grupo VL */}
+        <div className="h-20 flex items-center gap-3 px-5 border-b border-[#1F2A52] bg-[#0E152D]">
+          <div className="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center shrink-0">
+            <img
+              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+              alt="Grupo VL"
+              className="h-9 w-auto max-w-[56px] object-contain"
+            />
           </div>
-          <div>
-            <h1 className="font-bold text-slate-900 text-base leading-tight tracking-tight">
-              FL Arquivos
+          <div className="min-w-0">
+            <h1 className="font-bold text-white text-sm sm:text-base leading-tight tracking-tight truncate">
+              Gestão Patrimonial
             </h1>
-            <p className="text-[11px] text-slate-400 leading-none">Gestão Físico-Digital</p>
+            <p className="text-[11px] text-blue-300/80 font-medium leading-none mt-1">
+              Grupo VL • Acervo
+            </p>
           </div>
         </div>
 
         {/* Navigation list */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">{renderNavLinks()}</div>
+        <div className="flex-1 overflow-y-auto px-3.5 py-4 space-y-4">{renderNavLinks(true)}</div>
 
         {/* Footer Sidebar */}
-        <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-          <span>FL Arquivos v1.0 MVP</span>
+        <div className="p-3.5 border-t border-[#1F2A52] bg-[#0E152D] flex items-center justify-between text-[11px] text-slate-400">
+          <span>Gestão Patrimonial v2.0</span>
           <span
-            className="inline-block w-2 h-2 rounded-full bg-emerald-500"
+            className="inline-block w-2 h-2 rounded-full bg-emerald-400 shadow-xs"
             title="Sistema online"
           ></span>
         </div>
@@ -208,15 +226,27 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
 
       {/* Drawer Mobile */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="p-0 w-[280px]">
-          <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-100">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">
-              <Folders className="w-4 h-4" />
+        <SheetContent
+          side="left"
+          className="p-0 w-[280px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52]"
+        >
+          <div className="h-20 flex items-center gap-3 px-5 border-b border-[#1F2A52] bg-[#0E152D]">
+            <div className="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center shrink-0">
+              <img
+                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+                alt="Grupo VL"
+                className="h-8 w-auto max-w-[50px] object-contain"
+              />
             </div>
-            <span className="font-bold text-slate-900 text-base">FL Arquivos</span>
+            <div>
+              <span className="font-bold text-white text-base block leading-tight">
+                Gestão Patrimonial
+              </span>
+              <span className="text-[11px] text-blue-300/80">Grupo VL</span>
+            </div>
           </div>
-          <div className="overflow-y-auto px-4 py-4 max-h-[calc(100vh-64px)]">
-            {renderNavLinks()}
+          <div className="overflow-y-auto px-3.5 py-4 max-h-[calc(100vh-80px)]">
+            {renderNavLinks(true)}
           </div>
         </SheetContent>
       </Sheet>
@@ -240,8 +270,8 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <Input
                 type="text"
-                placeholder="Buscar por código (N1, N4/01), placa, renavan, empresa, titular, caixa..."
-                className="pl-9 pr-12 bg-slate-50 border-slate-200 text-sm focus-visible:ring-blue-500 w-full"
+                placeholder="Buscar por código (N1, N4/01), placa, RENAVAM, empresa, titular, caixa..."
+                className="pl-9 pr-12 bg-slate-50 border-slate-200 text-sm focus-visible:ring-[#1E2749] w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -260,7 +290,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
               className="flex items-center gap-2 border-slate-200 hover:bg-slate-50 text-slate-700"
               title="Ler QR Code ou Código de Barras"
             >
-              <QrCode className="w-4 h-4 text-blue-600" />
+              <QrCode className="w-4 h-4 text-[#1E2749]" />
               <span className="hidden md:inline text-xs font-medium">Escanear</span>
             </Button>
 
@@ -298,8 +328,8 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs border border-blue-200">
-                    {user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD'}
+                  <div className="w-8 h-8 rounded-full bg-[#1E2749] text-white font-bold flex items-center justify-center text-xs border border-[#1E2749]/20 shadow-2xs">
+                    {user?.name ? user.name.slice(0, 2).toUpperCase() : 'VL'}
                   </div>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-500 hidden sm:block" />
                 </button>
@@ -311,9 +341,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                       {user?.name || 'Administrador'}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {user?.email || 'admin@flarquivos.com'}
+                      {user?.email || 'admin@grupovl.com'}
                     </p>
-                    <span className="inline-block mt-1 text-[10px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded w-fit">
+                    <span className="inline-block mt-1 text-[10px] font-semibold text-[#1E2749] bg-blue-50 px-1.5 py-0.5 rounded w-fit border border-blue-100">
                       {user?.role || 'Administrador'}
                     </span>
                   </div>
@@ -344,7 +374,8 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
 
         {/* Footer */}
         <footer className="py-4 px-8 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
-          FL Arquivos © 2026 — Sistema Integrado de Gestão Física, Digital e Patrimonial
+          Gestão Patrimonial © 2026 Grupo VL — Sistema Integrado de Gestão Física, Digital e
+          Patrimonial
         </footer>
       </div>
 
@@ -353,7 +384,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-blue-600" />
+              <QrCode className="w-5 h-5 text-[#1E2749]" />
               Scanner de QR Code e Código de Barras
             </DialogTitle>
             <DialogDescription>
@@ -389,7 +420,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                   onClick={() => {
                     if (manualCode) handleScanSimulate(manualCode)
                   }}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-[#1E2749] hover:bg-[#151D38]"
                 >
                   Localizar
                 </Button>

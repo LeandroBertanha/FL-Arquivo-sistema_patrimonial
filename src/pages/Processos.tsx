@@ -182,7 +182,10 @@ export default function Processos() {
           </p>
         </div>
         {canEdit && (
-          <Button onClick={openNew} className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold">
+          <Button
+            onClick={openNew}
+            className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs font-semibold shadow-xs"
+          >
             <Plus className="w-4 h-4 mr-1" /> Novo Processo
           </Button>
         )}
@@ -490,7 +493,7 @@ export default function Processos() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs"
               >
                 {saving ? 'Gravando...' : 'Salvar Processo'}
               </Button>

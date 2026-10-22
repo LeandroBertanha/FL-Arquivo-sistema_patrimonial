@@ -56,13 +56,17 @@ export default function Signup() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg border-slate-200">
-        <CardHeader className="text-center space-y-2 pb-6">
-          <div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md">
-            <Folders className="w-6 h-6" />
+        <CardHeader className="text-center space-y-3 pb-6">
+          <div className="mx-auto bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center w-fit">
+            <img
+              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/image-bf151.png"
+              alt="Grupo VL"
+              className="h-14 w-auto max-w-[120px] object-contain"
+            />
           </div>
-          <CardTitle className="text-2xl font-bold text-slate-900">Criar Conta</CardTitle>
+          <CardTitle className="text-2xl font-bold text-[#1E2749]">Criar Conta</CardTitle>
           <CardDescription className="text-sm text-slate-500">
-            Cadastre-se para acessar o FL Arquivos
+            Cadastre-se para acessar a Gestão Patrimonial do Grupo VL
           </CardDescription>
         </CardHeader>
 
@@ -142,13 +146,13 @@ export default function Signup() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 font-medium"
+              className="w-full bg-[#1E2749] hover:bg-[#151D38] text-white font-medium shadow-md shadow-[#1E2749]/20"
             >
               {loading ? 'Criando conta...' : 'Concluir Cadastro'}
             </Button>
             <div className="text-center text-xs text-slate-500">
               Já possui acesso?{' '}
-              <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+              <Link to="/login" className="text-[#1E2749] font-semibold hover:underline">
                 Fazer login
               </Link>
             </div>

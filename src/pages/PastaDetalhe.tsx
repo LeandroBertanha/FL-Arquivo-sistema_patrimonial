@@ -512,8 +512,9 @@ export default function PastaDetalhe() {
                 </div>
               </div>
               <p className="text-slate-400 text-[11px] pt-2">
-                * Conforme as regras do sistema FL Arquivos, nenhum documento ou pasta física pode
-                ser descartado sem aprovação humana formal e emissão de termo de descarte.
+                * Conforme as regras do sistema de Gestão Patrimonial, nenhum documento ou pasta
+                física pode ser descartado sem aprovação humana formal e emissão de termo de
+                descarte.
               </p>
             </CardContent>
           </Card>

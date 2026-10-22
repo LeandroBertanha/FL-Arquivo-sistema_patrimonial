@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import Layout from './components/Layout'
 
-// Páginas do Sistema FL Arquivos
+// Páginas do Sistema Gestão Patrimonial (Grupo VL)
 import Dashboard from './pages/Dashboard'
 import ArquivoAtual from './pages/ArquivoAtual'
 import ArquivoMorto from './pages/ArquivoMorto'
@@ -46,8 +46,10 @@ function ProtectedLayout() {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-[#F8F9FB]">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-          <span className="text-xs text-slate-500 font-medium">Carregando FL Arquivos...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E2749]" />
+          <span className="text-xs text-slate-500 font-medium">
+            Carregando Gestão Patrimonial...
+          </span>
         </div>
       </div>
     )
@@ -89,8 +91,10 @@ function RootRoute() {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-[#F8F9FB]">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-          <span className="text-xs text-slate-500 font-medium">Carregando FL Arquivos...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E2749]" />
+          <span className="text-xs text-slate-500 font-medium">
+            Carregando Gestão Patrimonial...
+          </span>
         </div>
       </div>
     )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Home, Plus, Search, Building2, MapPin } from 'lucide-react'
+import { Home, Plus, Search, MapPin, Edit, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -10,8 +10,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog'
-import { propertiesService, logAudit } from '@/services/api'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { propertiesService } from '@/services/api'
 import type { Property } from '@/types'
 import { useAuth } from '@/contexts/AuthContext'
 import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
@@ -24,15 +35,21 @@ export default function Imoveis() {
 
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('imoveis', 'cards'))
 
-  // Modal Novo Imóvel
+  // Modal Criar / Editar Imóvel
   const [modalOpen, setModalOpen] = useState(false)
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null)
   const [description, setDescription] = useState('')
   const [address, setAddress] = useState('')
   const [ownerName, setOwnerName] = useState('CAPANNONE')
+  const [registryNumber, setRegistryNumber] = useState('CX N8')
   const [type, setType] = useState<Property['type']>('Conjunto Comercial')
   const [generatesRevenue, setGeneratesRevenue] = useState(false)
   const [revenueValue, setRevenueValue] = useState(0)
+  const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
+
+  // Modal Exclusão
+  const [deleteTarget, setDeleteTarget] = useState<Property | null>(null)
 
   useEffect(() => {
     loadData()
@@ -50,32 +67,69 @@ export default function Imoveis() {
     }
   }
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const openNew = () => {
+    setEditingProperty(null)
+    setDescription('')
+    setAddress('')
+    setOwnerName('CAPANNONE')
+    setRegistryNumber('CX N8')
+    setType('Conjunto Comercial')
+    setGeneratesRevenue(false)
+    setRevenueValue(0)
+    setNotes('')
+    setModalOpen(true)
+  }
+
+  const openEdit = (p: Property) => {
+    setEditingProperty(p)
+    setDescription(p.description || '')
+    setAddress(p.address || '')
+    setOwnerName(p.owner_name || 'CAPANNONE')
+    setRegistryNumber(p.registry_number || 'CX N8')
+    setType(p.type || 'Conjunto Comercial')
+    setGeneratesRevenue(!!p.generates_revenue)
+    setRevenueValue(p.revenue_value || 0)
+    setNotes(p.notes || '')
+    setModalOpen(true)
+  }
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
     try {
-      const created = await propertiesService.create({
+      const payload: Partial<Property> = {
         description,
         address,
         owner_name: ownerName,
+        registry_number: registryNumber,
         type,
         generates_revenue: generatesRevenue,
         revenue_value: Number(revenueValue),
-      })
-      await logAudit(
-        'CRIACAO_IMOVEL',
-        'properties',
-        created.id,
-        `Imóvel cadastrado: ${description} (${address})`,
-      )
+        notes,
+      }
+
+      if (editingProperty) {
+        await propertiesService.update(editingProperty.id, payload)
+      } else {
+        await propertiesService.create(payload)
+      }
       setModalOpen(false)
-      setDescription('')
-      setAddress('')
       loadData()
     } catch (err) {
       console.error(err)
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return
+    try {
+      await propertiesService.delete(deleteTarget.id)
+      setDeleteTarget(null)
+      loadData()
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -104,8 +158,8 @@ export default function Imoveis() {
         </div>
         {canEdit && (
           <Button
-            onClick={() => setModalOpen(true)}
-            className="bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold"
+            onClick={openNew}
+            className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1" /> Novo Imóvel
           </Button>
@@ -167,6 +221,35 @@ export default function Imoveis() {
                     {p.registry_number || 'CX N8'}
                   </span>
                 </div>
+                {p.notes && <p className="text-[11px] text-slate-400 italic">{p.notes}</p>}
+
+                {/* Ações de Edição e Exclusão no Card */}
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-1">
+                  {canEdit ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEdit(p)}
+                        className="h-7 px-2 text-[#1E2749] hover:text-blue-800 text-xs"
+                        title="Editar Imóvel"
+                      >
+                        <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setDeleteTarget(p)}
+                        className="h-7 px-2 text-red-600 hover:text-red-800 text-xs"
+                        title="Excluir Imóvel"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 mr-1" /> Excluir
+                      </Button>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-slate-400">Somente leitura</span>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -183,11 +266,12 @@ export default function Imoveis() {
                   <th className="py-3 px-4 whitespace-nowrap">Proprietário / Titular</th>
                   <th className="py-3 px-4 whitespace-nowrap">Matrícula / Registro</th>
                   <th className="py-3 px-4 whitespace-nowrap">Receita / Status</th>
+                  <th className="py-3 px-4 text-right whitespace-nowrap">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filtered.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50/70">
+                  <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">
                       {p.description}
                     </td>
@@ -210,6 +294,30 @@ export default function Imoveis() {
                         <span className="text-slate-400">Regular</span>
                       )}
                     </td>
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      {canEdit ? (
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openEdit(p)}
+                            className="h-7 px-2 text-[#1E2749] hover:text-blue-800"
+                          >
+                            <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setDeleteTarget(p)}
+                            className="h-7 px-2 text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">Somente leitura</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -218,12 +326,18 @@ export default function Imoveis() {
         </div>
       )}
 
+      {/* Modal Criar / Editar */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base text-slate-900">Cadastrar Imóvel</DialogTitle>
+            <DialogTitle className="text-base text-[#1E2749]">
+              {editingProperty ? 'Editar Imóvel' : 'Cadastrar Imóvel'}
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Preencha os dados do imóvel, titular proprietário e caixa física vinculada.
+            </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleCreate} className="space-y-3 py-2 text-xs">
+          <form onSubmit={handleSave} className="space-y-3 py-2 text-xs">
             <div className="space-y-1">
               <label className="font-semibold text-slate-700">Descrição do Imóvel *</label>
               <Input
@@ -239,6 +353,7 @@ export default function Imoveis() {
               <Input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+                placeholder="Rua, número, bairro, cidade..."
                 className="text-xs h-9"
               />
             </div>
@@ -259,23 +374,44 @@ export default function Imoveis() {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="font-semibold text-slate-700">Proprietário</label>
+                <label className="font-semibold text-slate-700">Proprietário / Titular</label>
                 <Input
                   value={ownerName}
                   onChange={(e) => setOwnerName(e.target.value)}
+                  placeholder="Ex: CAPANNONE"
+                  className="text-xs h-9"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Matrícula / Caixa</label>
+                <Input
+                  value={registryNumber}
+                  onChange={(e) => setRegistryNumber(e.target.value)}
+                  placeholder="Ex: CX N8"
+                  className="text-xs h-9 font-mono"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Receita Mensal (R$)</label>
+                <Input
+                  type="number"
+                  value={revenueValue}
+                  onChange={(e) => {
+                    setRevenueValue(Number(e.target.value))
+                    setGeneratesRevenue(Number(e.target.value) > 0)
+                  }}
                   className="text-xs h-9"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="font-semibold text-slate-700">Receita Mensal Estimada (R$)</label>
+              <label className="font-semibold text-slate-700">Observações</label>
               <Input
-                type="number"
-                value={revenueValue}
-                onChange={(e) => {
-                  setRevenueValue(Number(e.target.value))
-                  setGeneratesRevenue(Number(e.target.value) > 0)
-                }}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Observações do imóvel..."
                 className="text-xs h-9"
               />
             </div>
@@ -293,7 +429,7 @@ export default function Imoveis() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-emerald-600 hover:bg-emerald-700 text-xs"
+                className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs"
               >
                 {saving ? 'Gravando...' : 'Salvar Imóvel'}
               </Button>
@@ -301,6 +437,29 @@ export default function Imoveis() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Confirmação de Exclusão */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Imóvel?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza de que deseja excluir o imóvel{' '}
+              <strong>{deleteTarget?.description}</strong> (
+              {deleteTarget?.address || 'sem endereço'})? Esta ação será registrada na auditoria.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Excluir Definitivamente
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
