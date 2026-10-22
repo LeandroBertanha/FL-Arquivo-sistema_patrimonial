@@ -289,4 +289,10 @@
   .animate-spotlight {
     animation: spotlight 2s ease forwards;
   }
+
+  /* Utility to turn dark transparent logos into 100% solid white */
+  .logo-white {
+    filter: brightness(0) invert(1);
+    -webkit-filter: brightness(0) invert(1);
+  }
 }

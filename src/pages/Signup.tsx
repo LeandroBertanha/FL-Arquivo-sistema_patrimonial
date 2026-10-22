@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import pb from '@/lib/pocketbase/client'
+import logoGrupoVl from '@/assets/logogrupovlsemfundo-099cc.png'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -59,7 +60,7 @@ export default function Signup() {
         <CardHeader className="text-center space-y-3 pb-6">
           <div className="mx-auto bg-white px-5 py-3 rounded-2xl shadow-md border border-slate-200/80 flex items-center justify-center w-fit">
             <img
-              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+              src={logoGrupoVl}
               alt="Grupo VL"
               className="h-20 w-auto max-w-[180px] object-contain drop-shadow-xs"
             />

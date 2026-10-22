@@ -31,6 +31,7 @@ import {
   ChevronDown,
   User,
 } from 'lucide-react'
+import logoGrupoVl from '@/assets/logogrupovlsemfundo-099cc.png'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -194,21 +195,24 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       <aside className="hidden lg:flex flex-col w-[268px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52] shrink-0 h-screen sticky top-0">
         {/* Logo Grupo VL */}
         <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
-          <div className="bg-white px-2.5 py-1.5 rounded-xl shadow-md border border-white/20 flex items-center justify-center shrink-0">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 min-w-0 group hover:opacity-95 transition-opacity"
+          >
             <img
-              src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+              src={logoGrupoVl}
               alt="Grupo VL"
-              className="h-12 w-auto max-w-[85px] object-contain drop-shadow-xs"
+              className="h-14 w-auto max-w-[88px] object-contain logo-white shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
             />
-          </div>
-          <div className="min-w-0">
-            <h1 className="font-bold text-white text-sm sm:text-base leading-tight tracking-tight truncate">
-              Gestão Patrimonial
-            </h1>
-            <p className="text-[11px] text-blue-300/80 font-medium leading-none mt-1">
-              Grupo VL • Acervo
-            </p>
-          </div>
+            <div className="min-w-0">
+              <h1 className="font-bold text-white text-sm sm:text-base leading-tight tracking-tight truncate">
+                Gestão Patrimonial
+              </h1>
+              <p className="text-[11px] text-blue-300/80 font-medium leading-none mt-1">
+                Grupo VL • Acervo
+              </p>
+            </div>
+          </Link>
         </div>
 
         {/* Navigation list */}
@@ -231,19 +235,23 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           className="p-0 w-[280px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52]"
         >
           <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
-            <div className="bg-white px-2.5 py-1.5 rounded-xl shadow-md border border-white/20 flex items-center justify-center shrink-0">
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 min-w-0 group hover:opacity-95 transition-opacity"
+            >
               <img
-                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+                src={logoGrupoVl}
                 alt="Grupo VL"
-                className="h-12 w-auto max-w-[85px] object-contain drop-shadow-xs"
+                className="h-14 w-auto max-w-[88px] object-contain logo-white shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
               />
-            </div>
-            <div>
-              <span className="font-bold text-white text-base block leading-tight">
-                Gestão Patrimonial
-              </span>
-              <span className="text-[11px] text-blue-300/80">Grupo VL</span>
-            </div>
+              <div>
+                <span className="font-bold text-white text-base block leading-tight">
+                  Gestão Patrimonial
+                </span>
+                <span className="text-[11px] text-blue-300/80">Grupo VL</span>
+              </div>
+            </Link>
           </div>
           <div className="overflow-y-auto px-3.5 py-4 max-h-[calc(100vh-80px)]">
             {renderNavLinks(true)}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import logoGrupoVl from '@/assets/logogrupovlsemfundo-099cc.png'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -96,7 +97,7 @@ export default function Apresentacao() {
           <div className="flex items-center gap-3.5">
             <div className="bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center">
               <img
-                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+                src={logoGrupoVl}
                 alt="Grupo VL"
                 className="h-12 sm:h-14 w-auto max-w-[100px] object-contain"
               />
@@ -400,7 +401,7 @@ export default function Apresentacao() {
           <div className="flex items-center gap-3">
             <div className="bg-slate-100 px-2 py-1 rounded-md border border-slate-200 flex items-center justify-center">
               <img
-                src="https://dagtlwojkqyivnjgveda.supabase.co/storage/v1/object/public/message-attachments/05a48fcf-78d7-4879-9ed6-f23a0465721d/logogrupovlsemfundo-099cc.png"
+                src={logoGrupoVl}
                 alt="Grupo VL"
                 className="h-8 w-auto max-w-[65px] object-contain"
               />

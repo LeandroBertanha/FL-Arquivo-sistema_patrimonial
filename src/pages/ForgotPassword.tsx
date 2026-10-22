@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import pb from '@/lib/pocketbase/client'
+import logoGrupoVl from '@/assets/logogrupovlsemfundo-099cc.png'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -11,7 +12,7 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { Folders, Mail, CheckCircle2 } from 'lucide-react'
+import { Mail, CheckCircle2 } from 'lucide-react'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -34,9 +35,13 @@ export default function ForgotPassword() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg border-slate-200">
-        <CardHeader className="text-center space-y-2 pb-6">
-          <div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md">
-            <Folders className="w-6 h-6" />
+        <CardHeader className="text-center space-y-3 pb-6">
+          <div className="mx-auto bg-white px-5 py-3 rounded-2xl shadow-md border border-slate-200/80 flex items-center justify-center w-fit">
+            <img
+              src={logoGrupoVl}
+              alt="Grupo VL"
+              className="h-16 w-auto max-w-[150px] object-contain drop-shadow-xs"
+            />
           </div>
           <CardTitle className="text-2xl font-bold text-slate-900">Recuperar Senha</CardTitle>
           <CardDescription className="text-sm text-slate-500">
