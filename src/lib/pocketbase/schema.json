@@ -1,0 +1,2016 @@
+{
+  "generatedAt": "2026-10-22T14:31:57.941Z",
+  "collections": [
+    {
+      "name": "users",
+      "type": "auth",
+      "apiRules": {
+        "list": "id = @request.auth.id",
+        "view": "id = @request.auth.id",
+        "create": "",
+        "update": "id = @request.auth.id",
+        "delete": "id = @request.auth.id"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "avatar",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "role",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Administrador", "Gestor do Arquivo", "Operador", "Consulta", "Auditor"]
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativo", "Inativo"]
+        },
+        {
+          "name": "permissions",
+          "type": "json",
+          "required": false,
+          "system": false
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
+        "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''"
+      ]
+    },
+    {
+      "name": "companies",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "trade_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cnpj",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "state_registration",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "group_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativa", "Inativa"]
+        },
+        {
+          "name": "capital",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "has_pendencies",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "pendency_details",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_companies_name ON companies (name)",
+        "CREATE INDEX idx_companies_cnpj ON companies (cnpj)"
+      ]
+    },
+    {
+      "name": "people",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "cpf",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "rg",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "group_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "contact",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_people_name ON people (name)"]
+    },
+    {
+      "name": "archive_locations",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "Unidade",
+            "Sala",
+            "Armario",
+            "Gaveteiro",
+            "Estante",
+            "Gaveta",
+            "Prateleira",
+            "Posicao"
+          ]
+        },
+        {
+          "name": "parent_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "parent_id",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "full_path",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "capacity",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "occupied",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_arch_loc_name ON archive_locations (name)",
+        "CREATE INDEX idx_arch_loc_type ON archive_locations (type)"
+      ]
+    },
+    {
+      "name": "boxes",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "code_legacy",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "code_current",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "location_text",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "capacity",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativa", "Cheia", "Emprestada", "Arquivada", "Descartada"]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "responsible",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "items_summary",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "needs_review",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "review_notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_boxes_code_legacy ON boxes (code_legacy)"]
+    },
+    {
+      "name": "properties",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "description",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "Apartamento",
+            "Casa",
+            "Lote/Terreno",
+            "Vaga de Garagem",
+            "Conjunto Comercial",
+            "Outro"
+          ]
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "registry_number",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "owner_company",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "companies"
+        },
+        {
+          "name": "owner_person",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "people"
+        },
+        {
+          "name": "owner_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "estimated_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "generates_revenue",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "revenue_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "iptu_annual",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "iptu_status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Em dia", "Pendente", "Dívida Ativa"]
+        },
+        {
+          "name": "condo_monthly",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "has_debt",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "debt_details",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "transfer_target",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativo", "Vendido", "Em Transferência", "Em Reforma"]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "vehicles",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Carro", "Moto", "Caminhão", "Outro"]
+        },
+        {
+          "name": "brand",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "model",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "year_model",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "plate",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "renavam",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "chassi",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "folder_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "owner_company",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "companies"
+        },
+        {
+          "name": "owner_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "estimated_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "has_pendencies",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "pendency_summary",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_veh_plate ON vehicles (plate)",
+        "CREATE INDEX idx_veh_renavam ON vehicles (renavam)"
+      ]
+    },
+    {
+      "name": "vehicle_obligations",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "vehicle",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "vehicles"
+        },
+        {
+          "name": "vehicle_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "year",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "licensing_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "fines_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ipva_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "is_active_debt",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Pendente", "Pago", "Dívida Ativa", "Isento"]
+        },
+        {
+          "name": "due_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "payment_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "paid_value",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_veh_ob_veh_yr ON vehicle_obligations (vehicle, year)"]
+    },
+    {
+      "name": "processes",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "number",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "parties",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Trabalhista", "Cível", "Tributário", "Ativo", "Terminado", "Outro"]
+        },
+        {
+          "name": "box_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "box",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "boxes"
+        },
+        {
+          "name": "lawyer",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativo", "Terminado", "Suspenso", "Arquivado"]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "employees",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "role",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "company_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "company",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "companies"
+        },
+        {
+          "name": "situation",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Atual", "Ex-funcionário"]
+        },
+        {
+          "name": "box_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "box",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "boxes"
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "needs_review",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "folders",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "code_legacy",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "code_current",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "group_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "company",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "companies"
+        },
+        {
+          "name": "person",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "people"
+        },
+        {
+          "name": "property",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "properties"
+        },
+        {
+          "name": "vehicle",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "vehicles"
+        },
+        {
+          "name": "process",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "processes"
+        },
+        {
+          "name": "employee",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "employees"
+        },
+        {
+          "name": "box",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "boxes"
+        },
+        {
+          "name": "box_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "subcategory",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "archive_type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Atual", "Morto"]
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "No Arquivo",
+            "Fora do Arquivo",
+            "Em Trânsito",
+            "Emprestada",
+            "Descartada"
+          ]
+        },
+        {
+          "name": "confidentiality",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Normal", "Interno", "Confidencial", "Restrito"]
+        },
+        {
+          "name": "location_text",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "location_physical",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "archive_locations"
+        },
+        {
+          "name": "responsible",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "open_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "close_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "retention_period",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "expected_disposal_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "disposal_blocked",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cycle_status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "Ativo",
+            "Inativo",
+            "Arquivo Morto",
+            "Análise",
+            "Descarte",
+            "Guarda Permanente"
+          ]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tags",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "import_source",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "origin_sheet",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "origin_row",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "needs_review",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "review_reason",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "deleted",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_folders_code_legacy ON folders (code_legacy)",
+        "CREATE INDEX idx_folders_archive_type ON folders (archive_type)",
+        "CREATE INDEX idx_folders_group ON folders (group_name)",
+        "CREATE INDEX idx_folders_needs_rev ON folders (needs_review)"
+      ]
+    },
+    {
+      "name": "folder_movements",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "folder",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "folders"
+        },
+        {
+          "name": "folder_title",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "folder_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "Retirada",
+            "Devolução",
+            "Transferência de Local",
+            "Transferência para Arquivo Morto",
+            "Inclusão em Caixa",
+            "Retirada de Caixa"
+          ]
+        },
+        {
+          "name": "user_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "origin_location",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "destination_location",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_mov_folder ON folder_movements (folder)"]
+    },
+    {
+      "name": "checkouts",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "folder",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "folders"
+        },
+        {
+          "name": "folder_title",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "folder_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "requester_name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "purpose",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "checkout_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "expected_return_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "return_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "authorized_by",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "origin_location",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "return_receiver",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Ativo", "Devolvido", "Atrasado"]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "audit_logs",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "user_email",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "user_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "record_type",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "record_id",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "action",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "previous_value",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "new_value",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "details",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_audit_record ON audit_logs (record_type, record_id)"]
+    },
+    {
+      "name": "documents",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "file",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "folder",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "folders"
+        },
+        {
+          "name": "company",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "companies"
+        },
+        {
+          "name": "vehicle",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "vehicles"
+        },
+        {
+          "name": "property",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "properties"
+        },
+        {
+          "name": "type",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ocr_content",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ai_suggestions",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "map_nodes",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "node_key",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "x",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "node_type",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "metadata",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE UNIQUE INDEX idx_map_node_key ON map_nodes (node_key)"]
+    },
+    {
+      "name": "migration_issues",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "code_legacy",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "original_content",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "origin_sheet",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "origin_row",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "issue_type",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": [
+            "sem_codigo",
+            "codigo_duplicado",
+            "possivel_duplicidade",
+            "formato_invalido",
+            "observacao_detectada",
+            "vinculo_pendente",
+            "registro_vazio",
+            "necessita_decisao"
+          ]
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Pendente", "Em Análise", "Resolvida", "Ignorada"]
+        },
+        {
+          "name": "resolution_notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "inventory_sessions",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "location_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "operator_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Em Andamento", "Concluído", "Cancelado"]
+        },
+        {
+          "name": "items_expected",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "items_scanned",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "discrepancies",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "disposal_requests",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "folder",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "folders"
+        },
+        {
+          "name": "folder_title",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "folder_code",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "requester_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "approver_name",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "justification",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Pendente", "Aprovado", "Rejeitado", "Executado"]
+        },
+        {
+          "name": "disposal_certificate",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "executed_date",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "import_batches",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "source_file",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Rascunho", "Em Homologação", "Homologado", "Desfeito"]
+        },
+        {
+          "name": "total_rows",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "issues_count",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "imported_by",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "retention_rules",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id != ''",
+        "delete": "@request.auth.id != ''"
+      },
+      "fields": [
+        {
+          "name": "doc_type",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "retention_years",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "suggested_action",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["Descarte", "Guarda Permanente", "Microfilmagem"]
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    }
+  ]
+}

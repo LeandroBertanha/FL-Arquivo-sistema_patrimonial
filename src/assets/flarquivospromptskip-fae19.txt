@@ -1,0 +1,1062 @@
+PROMPT MESTRE - FL ARQUIVOS
+
+Quero desenvolver um sistema web moderno, responsivo e profissional chamado FL Arquivos para substituir integralmente o controle atual feito na planilha PASTAS NUMERACAO.xlsx.
+
+O sistema deve gerenciar arquivos fisicos e digitais, pastas suspensas, gaveteiros, caixas de arquivo morto, documentos de empresas, documentos pessoais, imoveis, veiculos, processos, funcionarios, ex-funcionarios e obrigacoes anuais de veiculos.
+
+O objetivo principal e transformar o arquivo fisico atual em um mapa digital inteligente, pesquisavel e totalmente rastreavel.
+
+==================================================
+1. PRINCIPIO CENTRAL DO FL ARQUIVOS
+==================================================
+
+A qualquer momento o sistema deve conseguir responder:
+
+- Onde esta uma determinada pasta?
+- Qual e o codigo fisico dela?
+- Em qual unidade, sala, armario, gaveteiro, gaveta, prateleira, caixa ou posicao ela esta?
+- A pasta esta no arquivo atual ou no arquivo morto?
+- A qual empresa, pessoa, imovel, veiculo ou processo ela pertence?
+- Quem retirou a pasta?
+- Quando ela saiu?
+- Quando deve voltar?
+- Onde ela estava anteriormente?
+- Existem documentos digitais vinculados?
+- Qual e o prazo de guarda?
+- Ela pode ser descartada ou esta bloqueada?
+- Quem alterou cada informacao?
+- Em qual caixa esta determinado processo, imovel ou funcionario?
+- Quais veiculos possuem IPVA, multas ou licenciamento registrados?
+
+O sistema deve substituir o Excel como fonte principal de consulta depois que a migracao for validada.
+
+==================================================
+2. REGRA DE MIGRACAO DOS CODIGOS EXISTENTES
+==================================================
+
+A planilha atual usa codigos como:
+N1
+N01
+N2
+N7/01
+N8/05
+N5/07
+
+Esses codigos representam identificadores fisicos e legados. Eles NAO devem ser chave primaria do banco de dados.
+
+Criar obrigatoriamente:
+- id interno unico, preferencialmente UUID;
+- codigo_legado;
+- codigo_atual, quando houver futura renumeracao;
+- origem_importacao;
+- guia_origem;
+- linha_origem;
+- lote_importacao;
+- necessita_revisao;
+- observacao_migracao.
+
+Regras:
+1. Preservar exatamente o codigo original do Excel na primeira migracao.
+2. Nunca renumerar automaticamente.
+3. Aceitar codigos repetidos sem conflito, pois o ID interno sera unico.
+4. Identificar duplicidades, lacunas e registros sem codigo.
+5. N1 e N01 devem permanecer distintos ate validacao humana.
+6. Correcoes posteriores devem gerar historico de auditoria.
+7. Nenhum dado legado pode ser descartado silenciosamente.
+
+==================================================
+3. ESTRUTURA FISICA DO ARQUIVO
+==================================================
+
+Criar hierarquia configuravel:
+
+Empresa ou Grupo
+-> Unidade
+-> Sala de Arquivo
+-> Armario / Estante / Gaveteiro
+-> Gaveta / Prateleira
+-> Caixa
+-> Posicao
+-> Pasta
+-> Documento
+
+Nem todos os registros precisam usar todos os niveis.
+
+Exemplo visual:
+Arquivo Principal -> Gaveteiro 03 -> Gaveta 07 -> Posicao 18 -> Pasta N5
+
+Criar Mapa do Arquivo mostrando capacidade e ocupacao por gaveta, prateleira e caixa.
+
+==================================================
+4. MODULOS PRINCIPAIS
+==================================================
+
+Criar os seguintes modulos:
+
+1. Dashboard
+2. Pesquisa Global
+3. Arquivo Atual
+4. Arquivo Morto
+5. Caixas de Arquivo
+6. Pastas
+7. Empresas
+8. Pessoas / Pessoais
+9. Imoveis
+10. Veiculos
+11. IPVA / Multas / Licenciamento
+12. Processos
+13. Funcionarios
+14. Ex-Funcionarios
+15. Documentos Digitais
+16. Movimentacoes
+17. Solicitacoes de Pastas
+18. Inventario
+19. Retencao e Descarte
+20. Relatorios
+21. Usuarios e Permissoes
+22. Auditoria
+23. Configuracoes
+24. Revisao da Migracao
+
+==================================================
+5. ARQUIVO ATUAL - DADOS REAIS DA PLANILHA
+==================================================
+
+A guia ARQUIVO ATUAL deve virar um modulo proprio, mas usando a mesma tabela de pastas do sistema.
+
+GRUPO VL:
+N1 - GRUPO VL CONTRATO SOCIAL
+N2 - ENEL VL
+N3 - CONDOMINIO E IPTU ACH
+N4 - ALUGUEL ACH
+N5 - VIVO 3062-3323 FIBRA
+N6 - GRAFICA LOGO GRUPO VL
+N7 - ADL4 GERAL
+N8 - SERVICOS FRS - FABIO ROGERIO
+N9 - IMPOSTOS TODAS EMPRESAS
+N10 - DECLARACOES GRUPO VL
+N11 - CONTRATOS ACH
+N13 - CONTRATOS VL
+
+AUTO&CO:
+Registro sem numero de pasta - AUTO&CO CONTRATO SOCIAL
+
+CAPANNONE:
+N1 - CAPANNONE BRADESCO
+N2 - CAPANNONE CONTRATO SOCIAL
+N3 - NF CAPANNONE
+N5 - CERTIDOES E PROCURACOES CAPANNONE
+N6 - IR CAPANNONE
+N7 - CADASTROS CAPANNONE
+
+ROMAZZINO INC:
+N1 - ROMAZZINO CONTRATO SOCIAL
+
+PESSOAIS:
+N1 - VIVO NADIA 99978-4248
+N2 - VIVO ODAIR 99982-2446
+N3 - DEPOSITOS PESSOAIS
+N4 - PAULISTANO ODAIR
+N5 - IMPOSTOS NADIA + ODAIR
+N8 - SUL AMERICA SAUDE
+N9 - DOCS FILIPPO
+N11 - DOCUMENTOS E IR ODAIR
+N12 - DOCUMENTOS E IR NADIA
+N13 - DOCUMENTOS E IR GIULIANO
+N14 - DOCUMENTOS E IR FELIPE
+N17 - BANCOS ODAIR
+N18 - MOVIDA
+
+BAY PORT:
+N1 - VIVO GUARARA
+N2 - CLARO NET
+N3 - COMGAS
+N4 - ENEL
+N6 - COND BAY PORT APART
+N7 - IPTU BAY PORT VAGAS
+N8 - IPTU BAY PORT APARTAMENTO
+N10 - COND BAY PORT VAGAS
+
+JD ACAPULCO:
+N1 - VIVO FIBRA 2390
+N2 - SKY
+N3 - ELEKTRO
+N4 - SABESP RUA 49/50
+N6 - COND JD ACAPULCO
+N7 - IPTU JD ACAPULCO
+
+FELIPE:
+N1 - ALUGUEL BRAMBILLA
+N2 - CONDOMINIO MY WAY
+N3 - IPTU MY WAY
+N4 - ENEL L MEIRELLES / MY WAY
+N5 - CLARO L MEIRELLES / MY WAY
+N6 - EXTRAS
+N7 - IPTU L MEIRELLES
+N8 - CONDOMINIO L MEIRELLES
+N9 - VIVO
+N10 - PAULISTANO FELIPE
+N11 - COMGAS L MEIRELLES
+N12 - AMIL
+N13 - VAL
+N14 - GOOD STORAGE
+
+JADE:
+N5 - TRISUL CREDITO
+
+Cada registro deve conter:
+- id interno;
+- codigo_legado;
+- grupo;
+- titulo;
+- descricao;
+- arquivo = Atual;
+- status;
+- localizacao fisica;
+- observacoes;
+- tags;
+- responsavel;
+- necessita_revisao;
+- origem_importacao.
+
+==================================================
+6. ARQUIVO MORTO - DADOS REAIS DA PLANILHA
+==================================================
+
+A guia ARQUIVO MORTO deve virar um modulo proprio, integrado a mesma tabela de pastas.
+
+ARQUIVO MORTO - PESSOAIS
+
+BAY PORT:
+N1 - VIVO 7949
+N3 - CLARO
+N4 - COMGAS
+N5 - COND BAY PORT VAGAS
+N6 - COND BAY PORT
+N7 - ENEL
+N8 - IPTU BAY PORT
+N9 - IPTU VAGAS
+
+JD ACAPULCO:
+N2 - VIVO FIBRA 2390
+N3 - SKY
+N4 - SABESP R49 - R50
+N6 - ELEKTRO
+N7 - IPTU JD ACAPULCO
+
+PESSOAIS:
+N1 - VIVO ODAIR
+N2 - VIVO NADIA
+N3 - DEPOSITOS PESSOAIS
+N4 - NOTAS FISCAIS
+N5 - IR FELIPE
+N7 - IR NADIA
+N8 - IR ODAIR
+N9 - SUL AMERICA
+N10 - PAULISTANO ODAIR
+
+FELIPE:
+N2 - COND MY WAY
+N3 - IPTU MY WAY
+N4 - CLARO - BOULEVARD - MY WAY
+N5 - EXTRAS
+N6 - VIVO
+N7 - COMGAS BOULEVARD
+N9 - AMIL
+N10 - PAULISTANO
+N11 - IPTU BOULEVARD
+N12 - CONDOMINIO BOULEVARD
+N13 - ENEL BOULEVARD - MY WAY
+
+ARQUIVO MORTO - EMPRESAS
+
+GRUPO VL:
+N1 - VIVO 3062-3323 FIBRA
+N5 - ENEL
+N6 - ALUGUEL ACH
+N7 - ADL4 GERAL
+N8 - IPTU E COND ACH
+
+CAPANNONE:
+N2 - CONTRATOS SOCIAIS
+
+Uma pasta pode migrar de Arquivo Atual para Arquivo Morto sem perder o historico.
+Registrar data, usuario, origem, destino, motivo e localizacao anterior.
+
+==================================================
+7. CAIXAS DE ARQUIVO - DADOS REAIS DA PLANILHA
+==================================================
+
+A guia CAIXAS ARQUIVOS deve se transformar em estrutura de caixas fisicas.
+
+Cada caixa deve possuir:
+- id interno;
+- codigo_legado;
+- nome;
+- categoria;
+- localizacao fisica;
+- capacidade;
+- ocupacao;
+- status;
+- observacoes;
+- QR Code;
+- codigo de barras;
+- responsavel;
+- lista de itens contidos.
+
+CX N2 - PROCESSOS TRABALHISTAS TERMINADOS
+N2/01 - ELIAS E FRANCISCA
+N2/02 - MADALENA - GUARUJA
+N2/03 - TOTO - GUARUJA
+N2/04 - ZE LUIS
+N2/05 - ROSA - VELHA
+
+CX N3 - EMPRESAS VENDIDAS
+N3/01 - VIACAO SAO DIMAS - PROMISSORIAS NA PASTA - TA COM FABIO
+N3/02 - BREDA SOROCABA
+N3/03 - ITABUNA - VIACAO CIDADE SORRISO - ESDRAS
+N3/04 - PASSARO MARROM
+N3/05 - VIACAO COMETA
+N3/06 - VIACAO LIMEIRENSE
+N3/07 - TECNIBUS - EXPOBUS
+N3/08 - VILA GALVAO
+N3/09 - TERRENO PALLAZINI
+N3/10 - VL X IKATU - ZECA ROMANO
+
+CX N4 - PROCESSOS ATIVOS
+N4/01 - CAMURUJIPE - ADVOGADO SERGIO NUNES + GUIAS 2022 - INSTRUMENTO CESSAO CREDITO DALOCANS X VL
+N4/01 - CAMURUJIPE - RITA
+N4/01 - CAMURUJIPE - RITA
+N4/04 - PROCESSOS GUARUJA - ACAPULCO
+N4/05 - MARCIO XAVIER
+Codigo legado ******* - DOSSIE ANDRE CARPINTEIRO CX4
+
+CX N5/01 e CX N5/02 - PROCESSOS TERMINADOS
+N5/01 - BANCO AGRIMISA
+N5/02 - EVELINA MALUF
+N5/03 - MANOEL RODRIGUES - NETO
+N5/04 - CCW - GARY - OTM
+N5/04 - CCW - GARY - OTM
+N5/04 - CCW - GARY - OTM
+N5/04 - CCW - GARY - OTM
+N5/05 - ELIANA OGER + CRISTIAN ADVOGADO ITAMARATI - 3 PASTAS
+N5/06 - VALDIRENE
+N5/07 - BANCO TRICURY - PASTA 1 - CONTRATOS - RECIBOS - PROCURACOES - CERTIDOES - DECLARACOES - EMAILS
+N5/07 - BANCO TRICURY - PASTA 2 - CITACOES
+N5/07 - BANCO TRICURY - PASTA 3 - DEFESAS - CONT COMPRA E VENDA - DOCS GERAIS
+N5/07 - BANCO TRICURY - PASTA 4 - DESPESAS
+Codigo legado ******* - DOSSIE ANDRE CARPINTEIRO CX4
+
+CX N6 - INSS NADIA E ODAIR
+N6/01 - INSS NADIA 1982 A 1988
+N6/02 - INSS NADIA 1989 A 2015
+N6/03 - INSS ODAIR 1985 A 1990
+N6/04 - INSS ODAIR 1991 A 1997
+N6/05 - ODAIR CARNES
+N6/06 - INSS GIULIANO
+N6/07 - INSS FELIPE
+
+CX N7 / CX N7/2 - EX FUNCIONARIOS
+N7/01 - CRISTIANE GUARUJA
+N7/02 - JAIR GUARUJA
+N7/03 - PRETA - IRANILDA
+N7/04 - LOURDES
+N7/05 - ELIAS
+N7/06 - HO
+N7/07 - MARINALVA
+N7/08 - MARIA BENEDITA - CAMPOS DO JORDAO
+N7/09 - IVONETE
+N7/10 - PEDRO
+N7/11 - GLORIA
+N7/12 - VIVIANE
+N7/13 - IRIS
+N7/14 - GUSTAVO
+N7/14 - ANDREA
+N7/15 - MANOEL VICENTE NETO
+N7/16 - SANDRA
+N7/17 - MADALENA
+N7/14 - DANIEL
+
+CX N8 - IMOVEIS
+N8/05 - ESCRITURA JD ACAPULCO LOTES 4,5,6 ODAIR LOCANTO
+N8/06 - ESCRITURA JD ACAPULCO LOTE 17,18,19 ODAIR LOCANTO
+N8/07 - APARTAMENTO BAY PORT
+N8/12 - APARTAMENTO MY WAY
+N8/13 - APARTAMENTO JADE
+N8/14 - VAGAS CARLA - RECIBOS - PROMISSORIA - ESCRITURA
+N8/15 - ESCRITURA GRAND BOULEVARD
+
+CX N8/2 - IMOVEIS VENDIDOS
+N8/08 - APARTAMENTO ST PATRICK
+N8/09 - CONJUNTOS RJ EDIFICIO BARTOLOMEU DE GUSMAO
+N8/10 - ESCRITURA CAMPOS DO JORDAO
+N8/11 - ESCRITURA RUA ARGENTINA
+
+CX N9 - EUNICE / DOCUMENTOS DIVERSOS
+N9/01 - DOCS PREFEITURA E CRA NADIA
+N9/02 - PARCELAMENTO GARE E DARE NADIA
+N9/03 - FABIO ROGERIO SOUZA
+N9/04 - DUILIO - ORLANDO - DR. WILSON - ALBERTO - MAZON - CHACUR
+N9/05 - DALOCANS - CONTRATO SOCIAL - ULTIMO
+N9/06 - FL CONSTRUTORA
+N9/07 - AUTOPOSTO MENINOS - SUSAN T - ZONA LIVRE
+N9/08 - PACAEMBUS - REFORBUS
+N9/09 - ATTIVO DOCUMENTOS
+N9/10 - PETLAND
+
+CX N10 - FUNCIONARIOS ATUAIS - ARQUIVO MORTO
+N10/01 - VALDINEI
+N10/02 - VAZIO
+N10/05 - ROSANA
+N10/07 - TIHAGO
+N10/08 - CARLOS
+
+CX N11 - MARTINI S/A
+Registro sem subcodigo - LIVRETOS
+Registro sem subcodigo - ATA DE ASSEMBLEIA
+Registro sem subcodigo - DECLARACAO
+
+CX N12 - FAMILIA
+N12/01 - BRASAO FAMILIA LOCANTO
+N12/02 - INES FERRI E FAMILIA
+N12/03 - ARACY DENORAH E FAMILIA
+N12/04 - FAMILIA LOCANTO
+
+Importante: preservar todas as repeticoes e inconsistencias acima como dados legados. Elas devem ser marcadas para revisao, nao apagadas.
+
+==================================================
+8. VEICULOS - DADOS REAIS DA PLANILHA
+==================================================
+
+A guia CARROS deve virar um modulo de veiculos.
+
+Campos:
+- id;
+- tipo: carro ou moto;
+- pasta;
+- marca;
+- modelo;
+- ano/modelo;
+- RENAVAN;
+- chassi;
+- placa;
+- proprietario ou empresa;
+- observacao;
+- localizacao da pasta;
+- documentos digitais;
+- historico.
+
+CARROS:
+N01 - CHEVROLET MALIBU - 2010/2011 - RENAVAN 328777897 - CHASSI 1G1Z95EU2BF209044 - PLACA FFL-4D33 - AUTO&CO
+N02 - CHEVROLET SILVERADO - 1997/1998 - RENAVAN 007.025.730.78 - CHASSI 8AG244NEWVA146065 - PLACA BVZ-1C98 - AUTO&CO
+N10 - FIAT 500 ABARTH - 2015/2015 - RENAVAN 010.974.869.47 - CHASSI 3C3CFFFH0FT726176 - PLACA PYI-3F45 - AUTO&CO
+N19 - FIAT 500 ABARTH - 2015/2015 - RENAVAN 010.766.828.60 - CHASSI 3C3CFFFH5FT695846 - PLACA PXH-2I44 - AUTO&CO
+N20 - MITSUBISHI PAJERO SPORT FLEX - 2010/2011 - RENAVAN 002.334.168.38 - CHASSI 93XFRK99WBCA20922 - PLACA IRL-4C63 - SOGRO
+
+MOTO:
+Sem numero de pasta - HONDA GL 1000 - 1976 - RENAVAN 004.143.752.20 - CHASSI GL12003366 - PLACA BVW-3257 - NADIA - OBSERVACAO GOLDWING
+
+Pesquisar por placa, RENAVAN, chassi, marca, modelo, proprietario e numero da pasta.
+
+==================================================
+9. IPVA, MULTAS E LICENCIAMENTO - DADOS REAIS
+==================================================
+
+A guia IPVA deve virar submodulo de obrigacoes anuais por veiculo.
+
+SILVERADO - 2026
+Licenciamento: 174,08
+Multas: 970,43
+IPVA: sem valor preenchido
+
+MALIBU - 2026
+Licenciamento: 174,08
+Multas: 1.769,44
+IPVA: 1.775,50
+
+FIAT ODAIR - 2026
+Licenciamento: 174,08
+Multas: 1.697,73
+IPVA: 5.005,90
+
+FIAT FELIPE
+2024 - DIVIDA ATIVA
+2025 - DIVIDA ATIVA
+2026 - Multas: 2.100,85 - IPVA: 5.005,90
+
+PAJERO - 2026
+Registro existente, valores ainda nao preenchidos.
+
+Campos:
+- veiculo;
+- ano/exercicio;
+- licenciamento;
+- multas;
+- IPVA;
+- data de vencimento;
+- data de pagamento;
+- valor pago;
+- status;
+- divida ativa;
+- observacao;
+- comprovante.
+
+Nunca sobrescrever exercicios anteriores.
+
+==================================================
+10. FICHA COMPLETA DA PASTA
+==================================================
+
+Cada pasta deve possuir:
+- ID interno;
+- codigo legado;
+- codigo atual;
+- titulo;
+- descricao;
+- grupo;
+- empresa;
+- pessoa;
+- imovel;
+- veiculo;
+- processo;
+- funcionario;
+- categoria;
+- subcategoria;
+- arquivo atual/morto;
+- caixa;
+- status;
+- nivel de confidencialidade;
+- localizacao fisica;
+- responsavel;
+- data de abertura;
+- data de encerramento;
+- prazo de guarda;
+- data de descarte prevista;
+- bloqueio de descarte;
+- observacoes;
+- tags;
+- anexos;
+- foto;
+- QR Code;
+- codigo de barras;
+- origem da importacao;
+- necessita_revisao.
+
+==================================================
+11. PESQUISA GLOBAL
+==================================================
+
+Criar barra de pesquisa global muito rapida.
+
+Pesquisar por:
+- codigo da pasta;
+- conteudo;
+- empresa;
+- pessoa;
+- CPF/CNPJ;
+- imovel;
+- veiculo;
+- placa;
+- RENAVAN;
+- chassi;
+- processo;
+- funcionario;
+- caixa;
+- tag;
+- palavra-chave;
+- localizacao;
+- conteudo de PDF via OCR.
+
+Resultado deve mostrar:
+Titulo
+Codigo
+Tipo
+Grupo
+Status
+Arquivo atual/morto
+Caixa
+Localizacao
+Responsavel
+
+Botao: LOCALIZAR
+
+==================================================
+12. MAPA DO ARQUIVO
+==================================================
+
+Criar tela visual com:
+- salas;
+- armarios;
+- gaveteiros;
+- gavetas;
+- prateleiras;
+- caixas;
+- posicoes.
+
+Mostrar percentual de ocupacao.
+
+Exemplo:
+Gaveta 01 - 92%
+Gaveta 02 - 74%
+Gaveta 03 - 100%
+Gaveta 04 - 38%
+
+Ao clicar, mostrar todas as pastas daquele local.
+
+Criar funcao SUGERIR MELHOR LOCALIZACAO DISPONIVEL.
+
+==================================================
+13. CHECK-OUT E CHECK-IN
+==================================================
+
+Toda retirada fisica de pasta deve ser registrada.
+
+CHECK-OUT:
+- pasta;
+- usuario que retirou;
+- finalidade;
+- data/hora;
+- prazo de devolucao;
+- autorizado por;
+- local de origem.
+
+Enquanto retirada, mostrar:
+PASTA FORA DO ARQUIVO
+Em posse de: usuario
+Data da retirada
+Previsao de devolucao
+
+CHECK-IN:
+- usuario que devolveu;
+- usuario que recebeu;
+- data/hora;
+- nova localizacao.
+
+==================================================
+14. CADEIA DE CUSTODIA E AUDITORIA
+==================================================
+
+Registrar permanentemente:
+- criacao;
+- edicao;
+- localizacao anterior e nova;
+- transferencia para arquivo morto;
+- retirada;
+- devolucao;
+- inclusao em caixa;
+- retirada de caixa;
+- digitalizacao;
+- download;
+- descarte;
+- restauracao;
+- alteracao de permissao;
+- alteracao de prazo.
+
+Cada log deve conter usuario, data, hora, registro, valor anterior e valor novo.
+
+Logs nao podem ser apagados por usuario comum.
+
+==================================================
+15. QR CODE E CODIGO DE BARRAS
+==================================================
+
+Gerar QR Code e codigo de barras para:
+- pastas;
+- caixas;
+- gavetas;
+- prateleiras;
+- localizacoes.
+
+Permitir leitura com camera do celular.
+
+Ao escanear uma pasta, abrir sua ficha.
+Ao escanear uma localizacao, mostrar seu conteudo.
+
+Permitir impressao de etiquetas.
+
+==================================================
+16. DOCUMENTOS DIGITAIS, OCR E IA
+==================================================
+
+Permitir anexar PDF, Word, Excel e imagens a qualquer pasta.
+
+Usar OCR para PDFs digitalizados e imagens.
+
+Extrair e sugerir:
+- empresa;
+- pessoa;
+- CPF/CNPJ;
+- placa;
+- RENAVAN;
+- contrato;
+- datas;
+- valores;
+- tipo documental;
+- tags.
+
+A IA pode sugerir classificacao, mas nunca deve alterar o cadastro sem confirmacao humana.
+
+Criar busca dentro do conteudo dos documentos.
+
+==================================================
+17. INVENTARIO FISICO
+==================================================
+
+Criar inventario por celular ou leitor de codigo.
+
+Fluxo:
+1. selecionar localizacao;
+2. escanear pasta ou caixa;
+3. comparar local esperado com local encontrado;
+4. gerar divergencias.
+
+Status:
+- correto;
+- faltante;
+- em local incorreto;
+- nao cadastrado;
+- duplicado.
+
+==================================================
+18. RETENCAO E DESCARTE
+==================================================
+
+Ciclo:
+ATIVO -> INATIVO -> ARQUIVO MORTO -> ANALISE -> DESCARTE OU GUARDA PERMANENTE
+
+Nunca descartar automaticamente.
+
+Criar:
+- regras configuraveis;
+- documentos elegiveis para descarte;
+- aprovacao;
+- bloqueio de descarte / legal hold;
+- termo de descarte;
+- log permanente.
+
+==================================================
+19. USUARIOS E PERMISSOES
+==================================================
+
+Perfis:
+- Administrador;
+- Gestor do Arquivo;
+- Operador;
+- Consulta;
+- Auditor.
+
+Permissoes granulares:
+visualizar, cadastrar, editar, movimentar, retirar, devolver, digitalizar, aprovar descarte, visualizar confidencial, administrar usuarios, acessar auditoria.
+
+==================================================
+20. DASHBOARD
+==================================================
+
+Mostrar:
+- total de pastas;
+- arquivo atual;
+- arquivo morto;
+- caixas;
+- pastas emprestadas;
+- devolucoes vencidas;
+- documentos digitais;
+- registros que precisam de revisao;
+- veiculos;
+- obrigacoes veiculares pendentes;
+- espaco ocupado;
+- espaco disponivel;
+- movimentacoes recentes.
+
+==================================================
+21. RELATORIOS
+==================================================
+
+Criar relatorios por:
+- empresa;
+- pessoa;
+- categoria;
+- arquivo;
+- caixa;
+- localizacao;
+- status;
+- emprestimos;
+- usuario;
+- movimentacao;
+- veiculo;
+- IPVA;
+- multas;
+- licenciamento;
+- retencao;
+- descarte;
+- inventario;
+- inconsistencias da migracao.
+
+Exportar PDF, Excel e CSV.
+
+==================================================
+22. IMPORTADOR DO EXCEL LEGADO
+==================================================
+
+Criar importador especifico para PASTAS NUMERACAO.xlsx.
+
+Guias obrigatorias:
+1. ARQUIVO ATUAL
+2. ARQUIVO MORTO
+3. CARROS
+4. IPVA
+5. CAIXAS ARQUIVOS
+
+O importador deve entender que as planilhas possuem blocos lado a lado, cabecalhos visuais e linhas em branco.
+
+O importador deve:
+- detectar grupos e cabecalhos;
+- transformar blocos em registros normalizados;
+- manter o valor original;
+- manter guia e linha de origem;
+- detectar registros sem codigo;
+- detectar duplicidades;
+- detectar codigos estranhos;
+- detectar observacoes misturadas no conteudo;
+- gerar relatorio antes de confirmar;
+- criar lote de importacao;
+- permitir desfazer importacao antes da homologacao;
+- nunca descartar uma linha apenas porque o formato parece inconsistente.
+
+==================================================
+23. INCONSISTENCIAS REAIS QUE DEVEM SER TRATADAS
+==================================================
+
+O Excel atual possui casos como:
+- N4/01 repetido tres vezes;
+- N7/14 repetido para Gustavo, Andrea e Daniel;
+- N5/04 repetido varias vezes;
+- N5/07 usado para quatro pastas diferentes do Banco Tricury;
+- registros sem numero de pasta;
+- marcadores como *******;
+- registro com observacao “Ta com Fabio” no proprio conteudo;
+- registro VAZIO;
+- N1 e N01;
+- RENAVAN ora numerico, ora texto com pontuacao;
+- placas antigas e formato Mercosul;
+- divida ativa em exercicios distintos;
+- anos de veiculo no formato 2010/2011;
+- lacunas de numeracao;
+- variacoes de grafia.
+
+Nao corrigir automaticamente.
+
+Criar tela REVISAO DA MIGRACAO com filtros:
+- sem codigo;
+- codigo duplicado;
+- possivel duplicidade de conteudo;
+- formato invalido;
+- observacao detectada;
+- vinculo pendente;
+- registro vazio;
+- necessita decisao humana.
+
+==================================================
+24. BANCO DE DADOS
+==================================================
+
+Criar entidades relacionadas:
+Users
+Roles
+Permissions
+Companies
+People
+Properties
+Vehicles
+VehicleObligations
+ArchiveLocations
+StorageUnits
+Drawers
+Shelves
+Boxes
+Folders
+Documents
+Categories
+Subcategories
+Processes
+Employees
+FolderMovements
+Checkouts
+RetentionRules
+DisposalRequests
+AuditLogs
+Tags
+Attachments
+Notifications
+InventorySessions
+ImportBatches
+ImportRows
+MigrationIssues
+
+Usar IDs internos unicos.
+
+==================================================
+25. INTERFACE DO FL ARQUIVOS
+==================================================
+
+Design SaaS premium, corporativo, minimalista e muito simples.
+
+Menu lateral:
+Dashboard
+Pesquisar
+Arquivo Atual
+Arquivo Morto
+Caixas
+Pastas
+Empresas
+Pessoas
+Imoveis
+Veiculos
+IPVA e Obrigacoes
+Processos
+Funcionarios
+Movimentacoes
+Inventario
+Retencao
+Relatorios
+Auditoria
+Revisao da Migracao
+Configuracoes
+
+Topo:
+- busca global;
+- scanner QR/barcode;
+- notificacoes;
+- perfil.
+
+Evitar interface poluida.
+
+==================================================
+26. MOBILE
+==================================================
+
+No celular priorizar:
+- pesquisar;
+- escanear QR Code;
+- escanear codigo de barras;
+- localizar pasta;
+- retirar;
+- devolver;
+- mover;
+- inventariar;
+- fotografar documento;
+- anexar comprovante.
+
+==================================================
+27. SEGURANCA
+==================================================
+
+Implementar:
+- autenticacao;
+- controle de sessao;
+- senhas protegidas;
+- permissoes por perfil;
+- soft delete;
+- historico de alteracoes;
+- backup;
+- restauracao administrativa;
+- logs de seguranca;
+- classificacao Normal, Interno, Confidencial e Restrito.
+
+Nunca excluir uma pasta definitivamente pela interface normal.
+
+==================================================
+28. MVP - ORDEM DE CONSTRUCAO
+==================================================
+
+Construir primeiro:
+1. autenticacao;
+2. usuarios e permissoes;
+3. banco de dados;
+4. importacao do Excel;
+5. revisao da migracao;
+6. estrutura fisica de localizacao;
+7. Arquivo Atual;
+8. Arquivo Morto;
+9. Caixas;
+10. Pastas;
+11. Pesquisa Global;
+12. Veiculos;
+13. IPVA/Obrigacoes;
+14. check-in/check-out;
+15. QR Code e barcode;
+16. historico;
+17. dashboard;
+18. relatorios basicos;
+19. versao mobile.
+
+Depois implementar:
+- OCR;
+- IA;
+- retencao avancada;
+- inventario avancado;
+- RFID;
+- integracoes;
+- workflows.
+
+==================================================
+29. COMPORTAMENTO DA IA
+==================================================
+
+A IA nunca pode inventar:
+- localizacao;
+- codigo;
+- vinculo;
+- valor;
+- prazo;
+- status de pagamento;
+- situacao juridica.
+
+Quando houver duvida:
+- marcar para revisao;
+- mostrar a origem;
+- pedir validacao humana.
+
+Priorizar integridade dos dados.
+
+==================================================
+30. RESULTADO ESPERADO
+==================================================
+
+O FL Arquivos deve transformar o arquivo fisico atual em um sistema inteligente, rastreavel, pesquisavel e seguro.
+
+A aplicacao deve conseguir responder rapidamente:
+- Onde esta a pasta da empresa X?
+- O que existe dentro da caixa N8?
+- Quais documentos estao no arquivo morto?
+- Quem esta com uma pasta?
+- Qual era sua localizacao anterior?
+- Qual e a pasta fisica de um veiculo?
+- Quais veiculos possuem valores de IPVA ou multas registrados?
+- Quais registros do Excel precisam de revisao?
+- Quais caixas contem processos terminados?
+- Quais pastas estao ligadas a imoveis?
+- Quais registros estao sem codigo?
+
+==================================================
+31. INSTRUCAO FINAL PARA O SKIP DA ADAPTA
+==================================================
+
+Antes de criar telas aleatorias:
+
+1. Analise toda esta especificacao.
+2. Modele o banco de dados.
+3. Crie o mapa de entidades e relacionamentos.
+4. Defina a estrategia de migracao do Excel.
+5. Crie o fluxo de revisao da migracao.
+6. Desenhe as telas principais.
+7. Construa o MVP na ordem definida.
+8. Use os dados reais descritos neste prompt como dataset inicial de teste e migracao.
+9. Preserve os dados originais.
+10. Nao simplifique o FL Arquivos para um mero gerenciador de documentos.
+
+Este e um sistema de gestao fisica + digital + patrimonial + rastreabilidade de arquivo.
+
+A prioridade absoluta da primeira versao e:
+LOCALIZAR, IDENTIFICAR, RASTREAR E CONTROLAR CADA PASTA FISICA.
+
+Depois de validar a migracao, o FL Arquivos deve substituir o Excel como fonte principal de consulta.

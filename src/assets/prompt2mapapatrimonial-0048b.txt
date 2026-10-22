@@ -1,0 +1,441 @@
+Quero criar dentro do sistema uma tela chamada:
+
+MAPA PATRIMONIAL
+
+Esta tela deve transformar automaticamente os dados do banco em uma representação gráfica visual e interativa do patrimônio empresarial.
+
+O mapa deverá funcionar como uma mistura de:
+
+Organograma
+Mapa mental
+Diagrama societário
+Mapa patrimonial
+Fluxograma
+
+O objetivo é permitir visualizar rapidamente:
+
+Qual empresa possui qual ativo.
+
+Quais empresas possuem participação em outras empresas.
+
+Quais imóveis pertencem a cada empresa.
+
+Quais veículos pertencem a cada empresa.
+
+Quais ativos geram receita.
+
+Quais ativos possuem impostos ou dívidas.
+
+Quais bens estão sendo transferidos.
+
+Quais empresas possuem pendências.
+
+==================================================
+EMPRESAS DO MAPA
+==================================================
+
+Usar como base inicial:
+
+Alpina Holding LTDA
+
+VL Intermediação e Participações em Negócios LTDA
+
+Romazzino INC LTDA
+
+Auto&Co Locação de Veículos LTDA
+
+Maggiore Consultoria e Serviços LTDA
+
+Martini Participações S.A.
+
+Global Assessoria e Intermediação LTDA
+
+Capannone Serviços Administrativos LTDA
+
+BL Systems
+
+==================================================
+ESTILO VISUAL
+==================================================
+
+Criar interface limpa e moderna.
+
+Fundo:
+
+Branco ou cinza muito claro.
+
+Empresas:
+
+Caixas azul-claro com borda azul.
+
+Imóveis:
+
+Caixas com ícone de prédio ou casa.
+
+Veículos:
+
+Caixas com ícone de veículo.
+
+Receita:
+
+Etiqueta amarela.
+
+Exemplo:
+
+GERA RECEITA
+
+Pendências:
+
+Caixas vermelhas.
+
+Exemplo:
+
+IPTU PENDENTE
+
+DÍVIDA ATIVA
+
+MULTAS
+
+TRANSFERÊNCIAS:
+
+Setas cinza ou azul com indicação:
+
+TRANSFERIR
+
+==================================================
+CONEXÕES
+==================================================
+
+O mapa deve representar relações através de setas.
+
+Tipos:
+
+Empresa → Empresa
+
+Empresa → Imóvel
+
+Empresa → Veículo
+
+Empresa → Ativo
+
+Ativo → Receita
+
+Ativo → Imposto
+
+Ativo → Dívida
+
+Empresa → Transferência → Empresa
+
+Cada tipo de relacionamento deve possuir cor ou estilo diferente.
+
+==================================================
+INTERATIVIDADE
+==================================================
+
+O mapa não pode ser uma imagem estática.
+
+Utilizar preferencialmente:
+
+React Flow
+
+ou
+
+Cytoscape.js
+
+Permitir:
+
+Zoom
+
+Pan
+
+Arrastar elementos
+
+Reposicionar caixas
+
+Abrir detalhes
+
+Editar
+
+Criar relacionamentos
+
+Excluir relacionamentos
+
+Expandir e recolher estruturas
+
+==================================================
+CLIQUES NOS ELEMENTOS
+==================================================
+
+Ao clicar em uma empresa abrir painel lateral com:
+
+Razão social
+
+CNPJ
+
+Capital
+
+Ativos
+
+Imóveis
+
+Veículos
+
+Receitas
+
+Dívidas
+
+Impostos
+
+Documentos
+
+Pendências
+
+Ao clicar em um imóvel mostrar:
+
+Empresa proprietária
+
+Endereço
+
+Matrícula
+
+Valor
+
+Receita
+
+IPTU
+
+Condomínio
+
+Dívidas
+
+Documentos
+
+Ao clicar em veículo mostrar:
+
+Empresa proprietária
+
+Placa
+
+Renavam
+
+Valor
+
+IPVA
+
+Licenciamento
+
+Multas
+
+Pendências
+
+==================================================
+FILTROS DO MAPA
+==================================================
+
+Adicionar filtros no topo.
+
+Exibir:
+
+Todas as empresas
+
+Somente empresas
+
+Somente imóveis
+
+Somente veículos
+
+Somente ativos que geram receita
+
+Somente dívidas
+
+Somente impostos
+
+Somente pendências
+
+Somente transferências
+
+Também permitir selecionar uma empresa específica.
+
+Quando selecionar:
+
+Auto&Co Locação de Veículos LTDA
+
+mostrar apenas a empresa e seus relacionamentos.
+
+==================================================
+VISÃO GERAL
+==================================================
+
+Criar botão:
+
+VISÃO GERAL
+
+Mostra todo o patrimônio.
+
+Outro botão:
+
+FOCAR EMPRESA
+
+Permite escolher uma empresa e mostrar somente sua estrutura.
+
+Outro botão:
+
+PENDÊNCIAS
+
+Mostra apenas elementos com:
+
+Dívidas
+
+Impostos
+
+Multas
+
+Documentação pendente
+
+Transferências
+
+==================================================
+LEGENDA
+==================================================
+
+Criar legenda discreta:
+
+Azul = estrutura patrimonial
+
+Amarelo = geração de receita
+
+Vermelho = pendência / dívida / imposto
+
+Cinza = transferência planejada
+
+Verde = situação regularizada
+
+==================================================
+ORGANIZAÇÃO AUTOMÁTICA
+==================================================
+
+Adicionar botão:
+
+ORGANIZAR MAPA
+
+Ao clicar, o sistema deve reorganizar automaticamente as caixas evitando:
+
+Sobreposição
+
+Setas cruzadas excessivamente
+
+Textos cortados
+
+Elementos fora da tela
+
+==================================================
+SALVAR POSIÇÃO
+==================================================
+
+O usuário poderá mover elementos manualmente.
+
+Salvar posição de cada caixa no banco.
+
+Assim, quando abrir novamente o mapa, a organização personalizada será preservada.
+
+==================================================
+ATUALIZAÇÃO AUTOMÁTICA
+==================================================
+
+O mapa deve ser alimentado pelo mesmo banco do sistema administrativo.
+
+Exemplo:
+
+Cadastro de um novo veículo em:
+
+Auto&Co Locação de Veículos LTDA
+
+deve automaticamente criar:
+
+Auto&Co
+↓
+Veículo
+
+Se esse veículo possuir IPVA vencido:
+
+Auto&Co
+↓
+Veículo
+↓
+IPVA pendente
+
+Se o IPVA for pago:
+
+a indicação vermelha deverá desaparecer ou mudar para regularizado.
+
+==================================================
+VISUALIZAÇÃO TEMPORAL
+==================================================
+
+Adicionar função:
+
+MAPA ATUAL
+
+e
+
+HISTÓRICO
+
+Permitir visualizar como a estrutura patrimonial era em determinada data.
+
+Exemplo:
+
+24/09/2026
+
+31/12/2026
+
+Isso permitirá acompanhar movimentações patrimoniais ao longo do tempo.
+
+==================================================
+EXPORTAÇÃO
+==================================================
+
+Permitir exportar o mapa atual em:
+
+PDF
+
+PNG
+
+SVG
+
+A exportação deve manter:
+
+Caixas
+
+Textos
+
+Setas
+
+Cores
+
+Legenda
+
+Data de geração
+
+==================================================
+OBJETIVO FINAL
+==================================================
+
+A tela deve funcionar como um verdadeiro painel visual de inteligência patrimonial.
+
+O usuário deve olhar para o mapa e entender rapidamente:
+
+Quem possui cada bem.
+
+Onde estão os ativos.
+
+Quais empresas concentram patrimônio.
+
+Quais ativos geram receita.
+
+Onde existem dívidas.
+
+Onde existem impostos.
+
+Quais transferências estão pendentes.
+
+Tudo deve estar integrado ao banco de dados e nunca depender de uma imagem manual.
