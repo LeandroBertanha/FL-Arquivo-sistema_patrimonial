@@ -1,15 +1,75 @@
-/* Main App Component - Handles routing (using react-router-dom), query client and other providers - use this file to add all routes */
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+/* Main App Component - Handles routing (using react-router-dom), query client and other providers */
+import React from 'react'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { AuthProvider } from '@/contexts/AuthContext'
-import Index from './pages/Index'
-import NotFound from './pages/NotFound'
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import Layout from './components/Layout'
 
-// ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
-// AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
+// Páginas do Sistema FL Arquivos
+import Dashboard from './pages/Dashboard'
+import ArquivoAtual from './pages/ArquivoAtual'
+import ArquivoMorto from './pages/ArquivoMorto'
+import Caixas from './pages/Caixas'
+import CaixaDetalhe from './pages/CaixaDetalhe'
+import Pastas from './pages/Pastas'
+import PastaDetalhe from './pages/PastaDetalhe'
+import Empresas from './pages/Empresas'
+import Pessoas from './pages/Pessoas'
+import Imoveis from './pages/Imoveis'
+import Veiculos from './pages/Veiculos'
+import IpvaObrigacoes from './pages/IpvaObrigacoes'
+import Processos from './pages/Processos'
+import Funcionarios from './pages/Funcionarios'
+import MapaArquivo from './pages/MapaArquivo'
+import Movimentacoes from './pages/Movimentacoes'
+import GlobalSearch from './pages/GlobalSearch'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
+import NotFound from './pages/NotFound'
+
+// Componente para proteger rotas autenticadas
+function ProtectedLayout() {
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#F8F9FB]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+          <span className="text-xs text-slate-500 font-medium">Carregando FL Arquivos...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
+
+  return <Outlet />
+}
+
+// Componente para rotas públicas (se já autenticado, vai para a Dashboard)
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    )
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
+}
 
 const App = () => (
   <BrowserRouter>
@@ -18,10 +78,57 @@ const App = () => (
         <Toaster />
         <Sonner />
         <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
+          {/* Rotas Autenticadas protegidas com Layout */}
+          <Route element={<ProtectedLayout />}>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/search" element={<GlobalSearch />} />
+              <Route path="/arquivo-atual" element={<ArquivoAtual />} />
+              <Route path="/arquivo-morto" element={<ArquivoMorto />} />
+              <Route path="/caixas" element={<Caixas />} />
+              <Route path="/caixas/:id" element={<CaixaDetalhe />} />
+              <Route path="/pastas" element={<Pastas />} />
+              <Route path="/pastas/:id" element={<PastaDetalhe />} />
+              <Route path="/empresas" element={<Empresas />} />
+              <Route path="/pessoas" element={<Pessoas />} />
+              <Route path="/imoveis" element={<Imoveis />} />
+              <Route path="/veiculos" element={<Veiculos />} />
+              <Route path="/ipva-obrigacoes" element={<IpvaObrigacoes />} />
+              <Route path="/processos" element={<Processos />} />
+              <Route path="/funcionarios" element={<Funcionarios />} />
+              <Route path="/mapa-arquivo" element={<MapaArquivo />} />
+              <Route path="/movimentacoes" element={<Movimentacoes />} />
+            </Route>
           </Route>
+
+          {/* Rotas Públicas */}
+          <Route
+            path="/login"
+            element={
+              <PublicOnlyRoute>
+                <Login />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicOnlyRoute>
+                <Signup />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicOnlyRoute>
+                <ForgotPassword />
+              </PublicOnlyRoute>
+            }
+          />
+
+          {/* Rota 404 para rotas desconhecidas */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TooltipProvider>
