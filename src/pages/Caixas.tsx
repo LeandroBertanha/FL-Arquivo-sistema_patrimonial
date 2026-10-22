@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 import {
   Dialog,
   DialogContent,
@@ -34,6 +35,7 @@ export default function Caixas() {
   const [folders, setFolders] = useState<FolderType[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('caixas', 'cards'))
 
   // Modal Nova Caixa
   const [newBoxModal, setNewBoxModal] = useState(false)
@@ -129,8 +131,8 @@ export default function Caixas() {
       </div>
 
       {/* Busca */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
-        <div className="relative flex-1">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="relative flex-1 min-w-[220px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
             placeholder="Buscar caixa por código (CX N2, CX N8...), nome ou categoria..."
@@ -139,12 +141,19 @@ export default function Caixas() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="text-xs text-slate-400 font-medium">
-          {filteredBoxes.length} caixa(s) encontrada(s)
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-slate-400 font-medium">
+            {filteredBoxes.length} caixa(s) encontrada(s)
+          </span>
+          <ViewModeToggle
+            mode={viewMode}
+            onChange={setViewMode}
+            storageKey="caixas"
+          />
         </div>
       </div>
 
-      {/* Grid de Caixas em Cards */}
+      {/* Grid de Caixas em Cards ou Tabela */}
       {loading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -154,7 +163,7 @@ export default function Caixas() {
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-400 text-xs">
           Nenhuma caixa física encontrada.
         </div>
-      ) : (
+      ) : viewMode === 'cards' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBoxes.map((box) => {
             const itemsInBox = folders.filter((f) => f.box_code === box.code_legacy)
@@ -241,6 +250,69 @@ export default function Caixas() {
               </Card>
             )
           })}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+              <tr>
+                <th className="py-3 px-4">Código</th>
+                <th className="py-3 px-4">Nome da Caixa</th>
+                <th className="py-3 px-4">Categoria</th>
+                <th className="py-3 px-4">Localização Física</th>
+                <th className="py-3 px-4">Ocupação</th>
+                <th className="py-3 px-4">Responsável</th>
+                <th className="py-3 px-4 text-right">Ação</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredBoxes.map((box) => {
+                const itemsInBox = folders.filter((f) => f.box_code === box.code_legacy)
+                const count = itemsInBox.length
+                const cap = box.capacity || 30
+                const pct = Math.min(Math.round((count / cap) * 100), 100)
+
+                return (
+                  <tr key={box.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-amber-700 whitespace-nowrap">
+                      {box.code_legacy}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-900">{box.name}</td>
+                    <td className="py-3 px-4 text-slate-600">{box.category || 'Geral'}</td>
+                    <td className="py-3 px-4 text-slate-500 max-w-xs truncate">
+                      {box.location_text || '—'}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span className="font-semibold text-slate-800">
+                        {count}/{cap} ({pct}%)
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-slate-600">{box.responsible || '—'}</td>
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setQrBox(box)}
+                          className="h-7 px-2 text-slate-600 hover:text-slate-900"
+                        >
+                          <QrCode className="w-3.5 h-3.5 mr-1" /> QR
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/caixas/${box.id}`)}
+                          className="h-7 px-2.5 text-blue-600 border-blue-200 hover:bg-blue-50"
+                        >
+                          Ver Itens ({count}) →
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 

@@ -236,6 +236,17 @@ export const vehiclesService = {
     await logAudit('EDICAO_VEICULO', 'vehicle', id, `Veículo atualizado: ${rec.model}`)
     return rec
   },
+  async delete(id: string) {
+    const old = await pb.collection('vehicles').getOne<Vehicle>(id).catch(() => null)
+    await pb.collection('vehicles').delete(id)
+    await logAudit(
+      'EXCLUSAO_VEICULO',
+      'vehicle',
+      id,
+      `Veículo excluído: ${old?.model || id} (${old?.plate || 'Sem placa'})`,
+    )
+    return true
+  },
 }
 
 // ================= OBRIGAÇÕES VEICULARES =================
@@ -264,6 +275,17 @@ export const obligationsService = {
     await logAudit('EDICAO_OBRIGACAO', 'vehicle_obligation', id, `Exercício ${rec.year} atualizado`)
     return rec
   },
+  async delete(id: string) {
+    const old = await pb.collection('vehicle_obligations').getOne<VehicleObligation>(id).catch(() => null)
+    await pb.collection('vehicle_obligations').delete(id)
+    await logAudit(
+      'EXCLUSAO_OBRIGACAO',
+      'vehicle_obligation',
+      id,
+      `Obrigação excluída: Exercício ${old?.year || ''} do veículo ${old?.vehicle_name || ''}`,
+    )
+    return true
+  },
 }
 
 // ================= PROCESSOS =================
@@ -284,6 +306,17 @@ export const processesService = {
     await logAudit('EDICAO_PROCESSO', 'process', id, `Processo atualizado: ${rec.title}`)
     return rec
   },
+  async delete(id: string) {
+    const old = await pb.collection('processes').getOne<ProcessItem>(id).catch(() => null)
+    await pb.collection('processes').delete(id)
+    await logAudit(
+      'EXCLUSAO_PROCESSO',
+      'process',
+      id,
+      `Processo excluído: ${old?.title || id}`,
+    )
+    return true
+  },
 }
 
 // ================= FUNCIONÁRIOS =================
@@ -303,6 +336,17 @@ export const employeesService = {
     const rec = await pb.collection('employees').update<Employee>(id, data)
     await logAudit('EDICAO_FUNCIONARIO', 'employee', id, `Funcionário atualizado: ${rec.name}`)
     return rec
+  },
+  async delete(id: string) {
+    const old = await pb.collection('employees').getOne<Employee>(id).catch(() => null)
+    await pb.collection('employees').delete(id)
+    await logAudit(
+      'EXCLUSAO_FUNCIONARIO',
+      'employee',
+      id,
+      `Funcionário excluído: ${old?.name || id}`,
+    )
+    return true
   },
 }
 
@@ -543,6 +587,37 @@ export const inventoryService = {
   },
   async update(id: string, data: Partial<InventorySession>) {
     return pb.collection('inventory_sessions').update<InventorySession>(id, data)
+  },
+}
+
+// ================= USUÁRIOS (CONFIGURAÇÃO) =================
+export const usersService = {
+  async getAll() {
+    return pb.collection('users').getFullList<User>({ sort: 'name' })
+  },
+  async update(id: string, data: Partial<User>) {
+    const rec = await pb.collection('users').update<User>(id, data)
+    await logAudit('EDICAO_USUARIO', 'user', id, `Usuário atualizado: ${rec.name} (${rec.role})`)
+    return rec
+  },
+  async create(data: { email: string; name: string; password?: string; passwordConfirm?: string; role?: string; status?: string }) {
+    const defaultPassword = data.password || 'Mudar@1234'
+    const rec = await pb.collection('users').create<User>({
+      email: data.email,
+      name: data.name,
+      password: defaultPassword,
+      passwordConfirm: defaultPassword,
+      role: data.role || 'Consulta',
+      status: data.status || 'Ativo',
+    })
+    await logAudit('CRIACAO_USUARIO', 'user', rec.id, `Novo usuário: ${rec.name} (${rec.email})`)
+    return rec
+  },
+  async delete(id: string) {
+    const old = await pb.collection('users').getOne<User>(id).catch(() => null)
+    await pb.collection('users').delete(id)
+    await logAudit('EXCLUSAO_USUARIO', 'user', id, `Usuário excluído: ${old?.name || id}`)
+    return true
   },
 }
 
