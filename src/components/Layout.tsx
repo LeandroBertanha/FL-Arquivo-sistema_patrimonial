@@ -193,25 +193,20 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
     <div className="min-h-screen bg-[#F8F9FB] flex w-full">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-[268px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52] shrink-0 h-screen sticky top-0">
-        {/* Logo Grupo VL */}
-        <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
+        {/* Logo e Cabeçalho da Sidebar */}
+        <div className="py-4 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
           <Link
             to="/dashboard"
-            className="flex items-center gap-3 min-w-0 group hover:opacity-95 transition-opacity"
+            className="flex flex-col items-center justify-center text-center group hover:opacity-95 transition-opacity w-full"
           >
             <img
               src={logoGrupoVl}
-              alt="Grupo VL"
-              className="h-14 w-auto max-w-[88px] object-contain logo-white shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
+              alt="Logo"
+              className="h-12 w-auto max-w-[120px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform group-hover:scale-[1.02]"
             />
-            <div className="min-w-0">
-              <h1 className="font-bold text-white text-sm sm:text-base leading-tight tracking-tight truncate">
-                Gestão Patrimonial
-              </h1>
-              <p className="text-[11px] text-blue-300/80 font-medium leading-none mt-1">
-                Grupo VL • Acervo
-              </p>
-            </div>
+            <h1 className="mt-2 font-bold text-[#D9C58A] text-sm sm:text-[15px] tracking-wide text-center leading-tight">
+              Gestão Patrimonial
+            </h1>
           </Link>
         </div>
 
@@ -234,23 +229,20 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           side="left"
           className="p-0 w-[280px] bg-[#141C38] text-slate-200 border-r border-[#1F2A52]"
         >
-          <div className="h-24 flex items-center gap-3 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
+          <div className="py-4 px-4 border-b border-[#1F2A52] bg-[#0E152D]">
             <Link
               to="/dashboard"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 min-w-0 group hover:opacity-95 transition-opacity"
+              className="flex flex-col items-center justify-center text-center group hover:opacity-95 transition-opacity w-full"
             >
               <img
                 src={logoGrupoVl}
-                alt="Grupo VL"
-                className="h-14 w-auto max-w-[88px] object-contain logo-white shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
+                alt="Logo"
+                className="h-12 w-auto max-w-[120px] object-contain logo-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
               />
-              <div>
-                <span className="font-bold text-white text-base block leading-tight">
-                  Gestão Patrimonial
-                </span>
-                <span className="text-[11px] text-blue-300/80">Grupo VL</span>
-              </div>
+              <span className="mt-2 font-bold text-[#D9C58A] text-sm sm:text-[15px] tracking-wide text-center leading-tight block">
+                Gestão Patrimonial
+              </span>
             </Link>
           </div>
           <div className="overflow-y-auto px-3.5 py-4 max-h-[calc(100vh-80px)]">
