@@ -148,7 +148,7 @@ export default function ArchiveView({ archiveType, title, description }: Archive
 
           <Button
             onClick={() => navigate('/pastas?novo=true')}
-            className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold shadow-xs"
+            className="bg-primary hover:bg-primary/90 text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1" />
             Nova Pasta
@@ -419,7 +419,7 @@ export default function ArchiveView({ archiveType, title, description }: Archive
               size="sm"
               disabled={transferring}
               onClick={handleTransferToMorto}
-              className="bg-blue-600 hover:bg-blue-700 text-xs"
+              className="bg-primary hover:bg-primary/90 text-xs"
             >
               {transferring ? 'Gravando...' : 'Confirmar Transferência'}
             </Button>

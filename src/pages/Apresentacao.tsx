@@ -124,7 +124,7 @@ export default function Apresentacao() {
             <Button
               asChild
               size="sm"
-              className="bg-[#1E2749] hover:bg-[#151D38] text-white shadow-sm text-xs sm:text-sm font-semibold px-4"
+              className="bg-primary hover:bg-primary/90 text-white shadow-sm text-xs sm:text-sm font-semibold px-4"
             >
               <Link to="/login" className="flex items-center gap-1.5">
                 <span>Entrar</span>
@@ -162,7 +162,7 @@ export default function Apresentacao() {
                 <Button
                   asChild
                   size="lg"
-                  className="w-full sm:w-auto h-12 px-7 bg-[#1E2749] hover:bg-[#151D38] text-white shadow-lg shadow-[#1E2749]/20 text-base font-semibold transition-all"
+                  className="w-full sm:w-auto h-12 px-7 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 text-base font-semibold transition-all"
                 >
                   <Link to="/login" className="flex items-center justify-center gap-2">
                     <span>Acessar Gestão Patrimonial</span>

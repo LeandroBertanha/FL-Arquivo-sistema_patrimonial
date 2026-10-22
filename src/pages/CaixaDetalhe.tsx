@@ -183,7 +183,7 @@ export default function CaixaDetalhe() {
           <Button
             size="sm"
             onClick={() => window.print()}
-            className="text-xs h-7 bg-blue-600 hover:bg-blue-700 w-full"
+            className="text-xs h-7 bg-primary hover:bg-primary/90 w-full"
           >
             <Printer className="w-3.5 h-3.5 mr-1" />
             Imprimir Etiqueta
@@ -208,7 +208,7 @@ export default function CaixaDetalhe() {
             <Button
               size="sm"
               onClick={() => setAddModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+              className="bg-primary hover:bg-primary/90 text-xs font-semibold"
             >
               <Plus className="w-4 h-4 mr-1" />
               Adicionar Pasta a esta Caixa
@@ -346,7 +346,7 @@ export default function CaixaDetalhe() {
               size="sm"
               disabled={!selectedFolderId || adding}
               onClick={handleAddFolderToBox}
-              className="bg-blue-600 hover:bg-blue-700 text-xs"
+              className="bg-primary hover:bg-primary/90 text-xs"
             >
               {adding ? 'Vinculando...' : 'Confirmar Inclusão'}
             </Button>

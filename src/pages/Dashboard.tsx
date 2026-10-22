@@ -129,7 +129,7 @@ export default function Dashboard() {
         <div className="flex flex-wrap items-center gap-2">
           <Button
             onClick={() => navigate('/pastas?novo=true')}
-            className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm shadow-xs"
+            className="bg-primary hover:bg-primary/90 text-xs sm:text-sm shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Nova Pasta

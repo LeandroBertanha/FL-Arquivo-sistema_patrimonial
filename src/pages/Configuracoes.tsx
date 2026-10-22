@@ -248,7 +248,7 @@ export default function Configuracoes() {
                 <Button
                   type="submit"
                   disabled={savingProfile}
-                  className="bg-blue-600 hover:bg-blue-700 text-xs"
+                  className="bg-primary hover:bg-primary/90 text-xs"
                 >
                   {savingProfile ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>
@@ -319,7 +319,7 @@ export default function Configuracoes() {
               <Button
                 size="sm"
                 onClick={() => setNewUserModalOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+                className="bg-primary hover:bg-primary/90 text-xs font-semibold"
               >
                 <UserPlus className="w-4 h-4 mr-1.5" /> Adicionar Usuário
               </Button>
@@ -510,7 +510,7 @@ export default function Configuracoes() {
                 type="submit"
                 size="sm"
                 disabled={creatingUser}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {creatingUser ? 'Criando...' : 'Cadastrar Usuário'}
               </Button>

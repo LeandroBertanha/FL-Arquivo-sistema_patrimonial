@@ -133,7 +133,7 @@ export default function Movimentacoes() {
         </div>
         <Button
           onClick={() => setModalCheckout(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+          className="bg-primary hover:bg-primary/90 text-xs font-semibold"
         >
           <ArrowUpRight className="w-4 h-4 mr-1" /> Registrar Retirada (Check-out)
         </Button>
@@ -326,7 +326,7 @@ export default function Movimentacoes() {
                 type="submit"
                 size="sm"
                 disabled={savingCheckout || !selectedFolderId}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {savingCheckout ? 'Registrando...' : 'Confirmar Saída'}
               </Button>

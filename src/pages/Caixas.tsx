@@ -122,7 +122,7 @@ export default function Caixas() {
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setNewBoxModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold shadow-xs"
+            className="bg-primary hover:bg-primary/90 text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1" />
             Nova Caixa
@@ -407,7 +407,7 @@ export default function Caixas() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {saving ? 'Salvando...' : 'Cadastrar Caixa'}
               </Button>
@@ -440,7 +440,7 @@ export default function Caixas() {
               <Button
                 size="sm"
                 onClick={() => window.print()}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-xs"
+                className="w-full bg-primary hover:bg-primary/90 text-xs"
               >
                 <Printer className="w-3.5 h-3.5 mr-1.5" />
                 Imprimir Etiqueta da Caixa

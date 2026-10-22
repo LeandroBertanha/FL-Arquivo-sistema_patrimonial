@@ -158,20 +158,26 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                 key={item.href}
                 to={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                className={`group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all ${
                   isActive
                     ? isDark
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-sm'
-                      : 'bg-[#1E2749] text-white font-semibold shadow-xs'
+                      ? 'bg-white/10 text-[#D9C58A] font-semibold shadow-sm'
+                      : 'bg-primary/10 text-primary font-semibold shadow-xs'
                     : isDark
-                      ? 'text-slate-300 hover:bg-white/10 hover:text-white'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'text-slate-300 hover:bg-white/10 hover:text-[#D9C58A]'
+                      : 'text-slate-600 hover:bg-primary/5 hover:text-primary'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
                     className={`w-4 h-4 ${
-                      isActive ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-500'
+                      isActive
+                        ? isDark
+                          ? 'text-[#D9C58A]'
+                          : 'text-primary'
+                        : isDark
+                          ? 'text-slate-400 group-hover:text-[#D9C58A]'
+                          : 'text-slate-500 group-hover:text-primary'
                     }`}
                   />
                   <span>{item.title}</span>
@@ -420,7 +426,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                   onClick={() => {
                     if (manualCode) handleScanSimulate(manualCode)
                   }}
-                  className="bg-[#1E2749] hover:bg-[#151D38]"
+                  className="bg-primary hover:bg-primary/90"
                 >
                   Localizar
                 </Button>

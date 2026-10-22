@@ -312,7 +312,7 @@ export default function GlobalSearch() {
             </div>
             <Button
               type="submit"
-              className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-sm font-semibold"
+              className="h-12 px-6 bg-primary hover:bg-primary/90 text-sm font-semibold"
             >
               Pesquisar
             </Button>
@@ -480,7 +480,7 @@ export default function GlobalSearch() {
                       <Button
                         size="sm"
                         onClick={() => handleLocalize(item)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold h-7 px-3 shadow-xs"
+                        className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold h-7 px-3 shadow-xs"
                       >
                         <MapPin className="w-3.5 h-3.5 mr-1" />
                         LOCALIZAR
@@ -601,7 +601,7 @@ export default function GlobalSearch() {
                     setLocModalOpen(false)
                     navigate(`/pastas/${selectedFolder.id}`)
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 text-xs"
+                  className="bg-primary hover:bg-primary/90 text-xs"
                 >
                   Abrir Ficha Completa
                 </Button>

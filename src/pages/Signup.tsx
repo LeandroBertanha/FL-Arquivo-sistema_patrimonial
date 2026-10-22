@@ -147,7 +147,7 @@ export default function Signup() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1E2749] hover:bg-[#151D38] text-white font-medium shadow-md shadow-[#1E2749]/20"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-medium shadow-md shadow-primary/20"
             >
               {loading ? 'Criando conta...' : 'Concluir Cadastro'}
             </Button>

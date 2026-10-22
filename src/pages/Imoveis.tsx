@@ -175,7 +175,7 @@ export default function Imoveis() {
         {canEdit && (
           <Button
             onClick={openNew}
-            className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs font-semibold shadow-xs"
+            className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1" /> Novo Imóvel
           </Button>
@@ -507,7 +507,7 @@ export default function Imoveis() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-[#1E2749] hover:bg-[#151D38] text-white text-xs"
+                className="bg-primary hover:bg-primary/90 text-white text-xs"
               >
                 {saving ? 'Gravando...' : 'Salvar Imóvel'}
               </Button>

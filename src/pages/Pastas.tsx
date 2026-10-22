@@ -148,7 +148,7 @@ export default function Pastas() {
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setNewModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold shadow-xs"
+            className="bg-primary hover:bg-primary/90 text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1" />
             Nova Pasta Física
@@ -459,7 +459,7 @@ export default function Pastas() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+                className="bg-primary hover:bg-primary/90 text-xs font-semibold"
               >
                 {saving ? 'Gravando...' : 'Cadastrar Pasta'}
               </Button>

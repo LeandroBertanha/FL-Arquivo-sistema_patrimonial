@@ -227,7 +227,7 @@ export default function PastaDetalhe() {
           <Button
             size="sm"
             onClick={() => setCheckoutModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs"
+            className="bg-primary hover:bg-primary/90 text-white font-semibold text-xs"
           >
             Registrar Saída (Check-out)
           </Button>
@@ -643,7 +643,7 @@ export default function PastaDetalhe() {
                 type="submit"
                 size="sm"
                 disabled={checkingOut}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {checkingOut ? 'Registrando...' : 'Confirmar Saída'}
               </Button>
@@ -775,7 +775,7 @@ export default function PastaDetalhe() {
                 type="submit"
                 size="sm"
                 disabled={savingEdit}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {savingEdit ? 'Salvando...' : 'Salvar Alterações'}
               </Button>

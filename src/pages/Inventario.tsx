@@ -189,7 +189,7 @@ export default function Inventario() {
         {canEdit && (
           <Button
             onClick={() => setNewModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+            className="bg-primary hover:bg-primary/90 text-xs font-semibold"
           >
             <Plus className="w-4 h-4 mr-1" /> Nova Sessão de Inventário
           </Button>
@@ -504,7 +504,7 @@ export default function Inventario() {
                 type="submit"
                 size="sm"
                 disabled={savingSession}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-primary hover:bg-primary/90 text-xs"
               >
                 {savingSession ? 'Abrindo Sessão...' : 'Iniciar Inventário'}
               </Button>

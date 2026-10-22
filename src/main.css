@@ -26,8 +26,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Grupo VL Navy #1E2749 -> hsl(227, 42%, 20%) */
-    --primary: 227 42% 20%;
+    /* Azul original do logo Grupo VL #20254D */
+    --primary: 233.3 41.3% 21.4%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 98%;
@@ -44,7 +44,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 233.3 41.3% 21.4%;
 
     --radius: 0.5rem;
 

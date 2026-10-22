@@ -219,7 +219,7 @@ export default function Relatorios() {
             </p>
             <Button
               onClick={exportLocalizacao}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold"
+              className="w-full bg-primary hover:bg-primary/90 text-white text-xs font-semibold"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" /> Exportar CSV
             </Button>
