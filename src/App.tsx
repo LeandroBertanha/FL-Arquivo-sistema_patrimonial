@@ -28,6 +28,7 @@ import GlobalSearch from './pages/GlobalSearch'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
+import Apresentacao from './pages/Apresentacao'
 import NotFound from './pages/NotFound'
 
 // Componente para proteger rotas autenticadas
@@ -52,7 +53,7 @@ function ProtectedLayout() {
   return <Outlet />
 }
 
-// Componente para rotas públicas (se já autenticado, vai para a Dashboard)
+// Componente para rotas públicas (se já autenticado, vai para o Dashboard)
 function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
 
@@ -65,10 +66,34 @@ function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (user) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return <>{children}</>
+}
+
+// Componente para a rota raiz "/":
+// Se autenticado -> redireciona direto para "/dashboard"
+// Se não autenticado -> renderiza a tela de Apresentação
+function RootRoute() {
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#F8F9FB]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+          <span className="text-xs text-slate-500 font-medium">Carregando FL Arquivos...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />
+  }
+
+  return <Apresentacao />
 }
 
 const App = () => (
@@ -78,10 +103,22 @@ const App = () => (
         <Toaster />
         <Sonner />
         <Routes>
+          {/* Rota Raiz: não autenticado -> Apresentação; autenticado -> Dashboard */}
+          <Route path="/" element={<RootRoute />} />
+
+          {/* Rota direta para Apresentação: se autenticado -> redireciona para Dashboard */}
+          <Route
+            path="/apresentacao"
+            element={
+              <PublicOnlyRoute>
+                <Apresentacao />
+              </PublicOnlyRoute>
+            }
+          />
+
           {/* Rotas Autenticadas protegidas com Layout */}
           <Route element={<ProtectedLayout />}>
             <Route element={<Layout />}>
-              <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/search" element={<GlobalSearch />} />
               <Route path="/arquivo-atual" element={<ArquivoAtual />} />
