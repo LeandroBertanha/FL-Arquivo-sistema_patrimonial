@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Users, Plus, Search, Folder } from 'lucide-react'
+import { Users, Plus, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import {
   Dialog,
@@ -11,18 +10,25 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { peopleService, foldersService } from '@/services/api'
-import type { Person, Folder as FolderType } from '@/types'
+import { peopleService, logAudit } from '@/services/api'
+import type { Person } from '@/types'
+import { useAuth } from '@/contexts/AuthContext'
+import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 
 export default function Pessoas() {
+  const { canEdit } = useAuth()
   const [people, setPeople] = useState<Person[]>([])
-  const [folders, setFolders] = useState<FolderType[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('pessoas', 'cards'))
+
+  // Modal Nova Pessoa
   const [modalOpen, setModalOpen] = useState(false)
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
-  const [groupName, setGroupName] = useState('PESSOAIS')
+  const [groupName, setGroupName] = useState('Família / Sócios')
+  const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -32,12 +38,8 @@ export default function Pessoas() {
   const loadData = async () => {
     setLoading(true)
     try {
-      const [pList, fList] = await Promise.all([
-        peopleService.getAll(),
-        foldersService.getAll("group_name = 'PESSOAIS' || person != ''", 'code_legacy', 1, 300),
-      ])
-      setPeople(pList)
-      setFolders(fList.items || [])
+      const list = await peopleService.getAll()
+      setPeople(list)
     } catch (err) {
       console.error(err)
     } finally {
@@ -49,9 +51,22 @@ export default function Pessoas() {
     e.preventDefault()
     setSaving(true)
     try {
-      await peopleService.create({ name, cpf, group_name: groupName })
+      const created = await peopleService.create({
+        name,
+        cpf,
+        group_name: groupName,
+        notes,
+      })
+      await logAudit(
+        'CRIACAO_PESSOA',
+        'people',
+        created.id,
+        `Pessoa física cadastrada: ${name} (CPF ${cpf || 'não informado'})`,
+      )
       setModalOpen(false)
       setName('')
+      setCpf('')
+      setNotes('')
       loadData()
     } catch (err) {
       console.error(err)
@@ -62,7 +77,13 @@ export default function Pessoas() {
 
   const filtered = people.filter((p) => {
     const q = search.toLowerCase()
-    return !q || p.name?.toLowerCase().includes(q) || p.cpf?.toLowerCase().includes(q)
+    return (
+      !q ||
+      p.name?.toLowerCase().includes(q) ||
+      p.cpf?.toLowerCase().includes(q) ||
+      p.group_name?.toLowerCase().includes(q) ||
+      p.notes?.toLowerCase().includes(q)
+    )
   })
 
   return (
@@ -71,82 +92,88 @@ export default function Pessoas() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Users className="w-6 h-6 text-blue-600" />
-            Pessoas Físicas e Documentos Pessoais
+            Pessoas Físicas e Titulares
           </h1>
           <p className="text-sm text-slate-500">
-            Controle de pastas familiares e pessoais (Nádia, Odair, Filippo, Giuliano, Felipe)
+            Sócios, herdeiros, procuradores e partes relacionadas com pastas no acervo
           </p>
         </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
-        >
-          <Plus className="w-4 h-4 mr-1" /> Nova Pessoa
-        </Button>
+        {canEdit && (
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4 mr-1" /> Nova Pessoa
+          </Button>
+        )}
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
-            placeholder="Buscar por nome da pessoa..."
+            placeholder="Buscar por nome, CPF, grupo ou anotações..."
             className="pl-9 text-xs h-9 bg-slate-50"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <span className="text-xs text-slate-400 font-medium">{filtered.length} pessoa(s)</span>
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="pessoas" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((p) => {
-          const personFolders = folders.filter(
-            (f) => f.title?.toUpperCase().includes(p.name.toUpperCase()) || f.person === p.id,
-          )
-          return (
+      {loading ? (
+        <div className="text-center py-12 text-slate-400 text-xs">Carregando pessoas...</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-400 text-xs shadow-xs">
+          Nenhuma pessoa física cadastrada.
+        </div>
+      ) : viewMode === 'cards' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((p) => (
             <Card key={p.id} className="shadow-xs hover:border-blue-300 transition-colors">
               <CardHeader className="p-4 pb-2">
-                <div className="flex items-center justify-between">
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] bg-blue-50 text-blue-700 border-blue-200"
-                  >
-                    PESSOAL
-                  </Badge>
-                  <span className="text-xs text-slate-400 font-semibold">
-                    {personFolders.length} pasta(s)
-                  </span>
-                </div>
-                <CardTitle className="text-base font-bold text-slate-900 mt-2">{p.name}</CardTitle>
+                <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">
+                  {p.group_name || 'Parte Relacionada'}
+                </span>
+                <CardTitle className="text-sm font-bold text-slate-900 mt-1">{p.name}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-1 space-y-2 text-xs">
-                <p className="text-slate-500">Documentação vinculada:</p>
-                <div className="space-y-1 max-h-36 overflow-y-auto">
-                  {personFolders.slice(0, 5).map((f) => (
-                    <div
-                      key={f.id}
-                      className="p-1.5 bg-slate-50 rounded text-[11px] flex justify-between gap-2 border border-slate-100"
-                    >
-                      <span className="font-semibold text-slate-700 truncate">{f.title}</span>
-                      <span className="font-mono text-blue-600 shrink-0">{f.code_legacy}</span>
-                    </div>
-                  ))}
-                  {personFolders.length > 5 && (
-                    <span className="text-[10px] text-slate-400 block text-center">
-                      + {personFolders.length - 5} outras pastas no acervo
-                    </span>
-                  )}
-                </div>
+              <CardContent className="p-4 pt-1 space-y-1 text-xs text-slate-600">
+                <p className="font-mono">CPF: {p.cpf || 'Sob sigilo / Não informado'}</p>
+                {p.notes && <p className="text-slate-400 italic text-[11px]">{p.notes}</p>}
               </CardContent>
             </Card>
-          )
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+              <tr>
+                <th className="py-3 px-4">Nome Completo</th>
+                <th className="py-3 px-4">CPF</th>
+                <th className="py-3 px-4">Grupo / Vínculo</th>
+                <th className="py-3 px-4">Observações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((p) => (
+                <tr key={p.id} className="hover:bg-slate-50/70">
+                  <td className="py-3 px-4 font-semibold text-slate-900">{p.name}</td>
+                  <td className="py-3 px-4 font-mono text-slate-600">{p.cpf || '—'}</td>
+                  <td className="py-3 px-4 text-blue-700 font-medium">{p.group_name || '—'}</td>
+                  <td className="py-3 px-4 text-slate-500 max-w-xs truncate">{p.notes || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base text-slate-900">Cadastrar Pessoa</DialogTitle>
+            <DialogTitle className="text-base text-slate-900">Cadastrar Pessoa Física</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreate} className="space-y-3 py-2 text-xs">
             <div className="space-y-1">
@@ -164,6 +191,22 @@ export default function Pessoas() {
                 value={cpf}
                 onChange={(e) => setCpf(e.target.value)}
                 className="text-xs h-9 font-mono"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="font-semibold text-slate-700">Grupo / Vínculo</label>
+              <Input
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                className="text-xs h-9"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="font-semibold text-slate-700">Observações</label>
+              <Input
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="text-xs h-9"
               />
             </div>
             <DialogFooter className="pt-2">

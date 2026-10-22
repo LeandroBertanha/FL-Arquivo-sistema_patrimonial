@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Home, Plus, Search, MapPin, DollarSign, AlertCircle } from 'lucide-react'
+import { Home, Plus, Search, Building2, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -11,23 +11,27 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { propertiesService } from '@/services/api'
+import { propertiesService, logAudit } from '@/services/api'
 import type { Property } from '@/types'
+import { useAuth } from '@/contexts/AuthContext'
+import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 
 export default function Imoveis() {
+  const { canEdit } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('imoveis', 'cards'))
+
+  // Modal Novo Imóvel
   const [modalOpen, setModalOpen] = useState(false)
   const [description, setDescription] = useState('')
-  const [type, setType] = useState<Property['type']>('Apartamento')
   const [address, setAddress] = useState('')
-  const [ownerName, setOwnerName] = useState('')
-  const [iptuAnnual, setIptuAnnual] = useState(0)
+  const [ownerName, setOwnerName] = useState('CAPANNONE')
+  const [type, setType] = useState<Property['type']>('Conjunto Comercial')
   const [generatesRevenue, setGeneratesRevenue] = useState(false)
   const [revenueValue, setRevenueValue] = useState(0)
-  const [hasDebt, setHasDebt] = useState(false)
-  const [debtDetails, setDebtDetails] = useState('')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -50,20 +54,23 @@ export default function Imoveis() {
     e.preventDefault()
     setSaving(true)
     try {
-      await propertiesService.create({
+      const created = await propertiesService.create({
         description,
-        type,
         address,
         owner_name: ownerName,
-        iptu_annual: Number(iptuAnnual),
+        type,
         generates_revenue: generatesRevenue,
         revenue_value: Number(revenueValue),
-        has_debt: hasDebt,
-        debt_details: debtDetails,
-        status: 'Ativo',
       })
+      await logAudit(
+        'CRIACAO_IMOVEL',
+        'properties',
+        created.id,
+        `Imóvel cadastrado: ${description} (${address})`,
+      )
       setModalOpen(false)
       setDescription('')
+      setAddress('')
       loadData()
     } catch (err) {
       console.error(err)
@@ -78,7 +85,8 @@ export default function Imoveis() {
       !q ||
       p.description?.toLowerCase().includes(q) ||
       p.address?.toLowerCase().includes(q) ||
-      p.owner_name?.toLowerCase().includes(q)
+      p.owner_name?.toLowerCase().includes(q) ||
+      p.registry_number?.toLowerCase().includes(q)
     )
   })
 
@@ -88,89 +96,119 @@ export default function Imoveis() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Home className="w-6 h-6 text-emerald-600" />
-            Gestão de Imóveis e Escrituras
+            Imóveis e Patrimônio Imobiliário
           </h1>
           <p className="text-sm text-slate-500">
-            Escrituras, contratos de locação, IPTU e condomínio (CX N8 e CX N8/2)
+            Escrituras, contratos de locação e pastas físicas custodiadas (Caixa N8)
           </p>
         </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
-        >
-          <Plus className="w-4 h-4 mr-1" /> Novo Imóvel
-        </Button>
+        {canEdit && (
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4 mr-1" /> Novo Imóvel
+          </Button>
+        )}
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
-            placeholder="Buscar imóvel por descrição, endereço ou titular..."
+            placeholder="Buscar por descrição, endereço, proprietário ou matrícula..."
             className="pl-9 text-xs h-9 bg-slate-50"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <span className="text-xs text-slate-400 font-medium">{filtered.length} imóvel(is)</span>
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="imoveis" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((p) => (
-          <Card
-            key={p.id}
-            className="shadow-xs hover:border-emerald-300 transition-colors flex flex-col justify-between"
-          >
-            <CardHeader className="p-4 pb-2">
-              <div className="flex items-start justify-between">
-                <Badge
-                  variant="outline"
-                  className="text-[10px] bg-emerald-50 text-emerald-800 border-emerald-200"
-                >
-                  {p.type}
-                </Badge>
-                {p.status === 'Vendido' ? (
-                  <Badge variant="outline" className="text-[10px] bg-slate-100 text-slate-600">
-                    Vendido (CX N8/2)
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-[10px] bg-emerald-100 text-emerald-800">
-                    Ativo
-                  </Badge>
-                )}
-              </div>
-              <CardTitle className="text-sm font-bold text-slate-900 mt-2">
-                {p.description}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 pt-1 space-y-2.5 text-xs">
-              <div className="flex items-center gap-1.5 text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                <span className="truncate">{p.address || 'Endereço sob consulta'}</span>
-              </div>
-              <p className="text-slate-600">
-                Proprietário: <strong>{p.owner_name || 'Grupo VL'}</strong>
-              </p>
-
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {p.generates_revenue && (
+      {loading ? (
+        <div className="text-center py-12 text-slate-400 text-xs">Carregando imóveis...</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-400 text-xs shadow-xs">
+          Nenhum imóvel encontrado.
+        </div>
+      ) : viewMode === 'cards' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((p) => (
+            <Card key={p.id} className="shadow-xs hover:border-emerald-300 transition-colors">
+              <CardHeader className="p-4 pb-2">
+                <div className="flex items-start justify-between">
                   <Badge
                     variant="outline"
-                    className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 font-bold"
+                    className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"
                   >
-                    GERA RECEITA (R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês)
+                    {p.type}
                   </Badge>
-                )}
-                {p.has_debt && (
-                  <Badge variant="destructive" className="text-[10px]">
-                    {p.debt_details || 'DÍVIDA / IPTU PENDENTE'}
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  {p.generates_revenue && (
+                    <Badge className="bg-emerald-600 text-white text-[10px]">
+                      Receita: R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                    </Badge>
+                  )}
+                </div>
+                <CardTitle className="text-sm font-bold text-slate-900 mt-2">
+                  {p.description}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-1 space-y-1.5 text-xs text-slate-600">
+                <p className="flex items-center gap-1.5 text-slate-500">
+                  <MapPin className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                  <span className="truncate">{p.address || 'Endereço sob consulta'}</span>
+                </p>
+                <div className="flex justify-between border-t border-slate-100 pt-2 text-slate-500">
+                  <span>
+                    Proprietário: <strong>{p.owner_name || 'CAPANNONE'}</strong>
+                  </span>
+                  <span className="font-mono text-blue-700 font-bold">
+                    {p.registry_number || 'CX N8'}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+              <tr>
+                <th className="py-3 px-4">Descrição</th>
+                <th className="py-3 px-4">Tipo</th>
+                <th className="py-3 px-4">Endereço</th>
+                <th className="py-3 px-4">Proprietário / Titular</th>
+                <th className="py-3 px-4">Matrícula / Registro</th>
+                <th className="py-3 px-4">Receita / Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filtered.map((p) => (
+                <tr key={p.id} className="hover:bg-slate-50/70">
+                  <td className="py-3 px-4 font-semibold text-slate-900">{p.description}</td>
+                  <td className="py-3 px-4 text-slate-600">{p.type}</td>
+                  <td className="py-3 px-4 text-slate-600 max-w-xs truncate">{p.address || '—'}</td>
+                  <td className="py-3 px-4 text-slate-700">{p.owner_name || '—'}</td>
+                  <td className="py-3 px-4 font-mono font-bold text-blue-700">
+                    {p.registry_number || 'CX N8'}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {p.generates_revenue ? (
+                      <Badge className="bg-emerald-600 text-white text-[10px]">
+                        R$ {p.revenue_value?.toLocaleString('pt-BR')}/mês
+                      </Badge>
+                    ) : (
+                      <span className="text-slate-400">Regular</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-md">
@@ -179,11 +217,12 @@ export default function Imoveis() {
           </DialogHeader>
           <form onSubmit={handleCreate} className="space-y-3 py-2 text-xs">
             <div className="space-y-1">
-              <label className="font-semibold text-slate-700">Descrição / Título do Imóvel *</label>
+              <label className="font-semibold text-slate-700">Descrição do Imóvel *</label>
               <Input
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                placeholder="Ex: Galpão Industrial Vila Leopoldina"
                 className="text-xs h-9"
               />
             </div>
@@ -197,6 +236,21 @@ export default function Imoveis() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
+                <label className="font-semibold text-slate-700">Tipo</label>
+                <select
+                  className="w-full h-9 border border-slate-200 rounded-md px-3 bg-white text-xs"
+                  value={type}
+                  onChange={(e: any) => setType(e.target.value)}
+                >
+                  <option value="Conjunto Comercial">Conjunto Comercial</option>
+                  <option value="Apartamento">Apartamento</option>
+                  <option value="Casa">Casa</option>
+                  <option value="Lote/Terreno">Lote/Terreno</option>
+                  <option value="Vaga de Garagem">Vaga de Garagem</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+              <div className="space-y-1">
                 <label className="font-semibold text-slate-700">Proprietário</label>
                 <Input
                   value={ownerName}
@@ -204,33 +258,18 @@ export default function Imoveis() {
                   className="text-xs h-9"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="font-semibold text-slate-700">IPTU Anual (R$)</label>
-                <Input
-                  type="number"
-                  value={iptuAnnual}
-                  onChange={(e) => setIptuAnnual(Number(e.target.value))}
-                  className="text-xs h-9"
-                />
-              </div>
             </div>
-            <div className="flex items-center gap-4 pt-1">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={generatesRevenue}
-                  onChange={(e) => setGeneratesRevenue(e.target.checked)}
-                />
-                <span>Gera Receita de Aluguel</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer text-red-700">
-                <input
-                  type="checkbox"
-                  checked={hasDebt}
-                  onChange={(e) => setHasDebt(e.target.checked)}
-                />
-                <span>Possui Pendência / Dívida</span>
-              </label>
+            <div className="space-y-1">
+              <label className="font-semibold text-slate-700">Receita Mensal Estimada (R$)</label>
+              <Input
+                type="number"
+                value={revenueValue}
+                onChange={(e) => {
+                  setRevenueValue(Number(e.target.value))
+                  setGeneratesRevenue(Number(e.target.value) > 0)
+                }}
+                className="text-xs h-9"
+              />
             </div>
             <DialogFooter className="pt-2">
               <Button
@@ -246,7 +285,7 @@ export default function Imoveis() {
                 type="submit"
                 size="sm"
                 disabled={saving}
-                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                className="bg-emerald-600 hover:bg-emerald-700 text-xs"
               >
                 {saving ? 'Gravando...' : 'Salvar Imóvel'}
               </Button>

@@ -36,11 +36,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { vehiclesService, obligationsService } from '@/services/api'
+import { vehiclesService, obligationsService, logAudit } from '@/services/api'
+import { useAuth } from '@/contexts/AuthContext'
 import type { Vehicle, VehicleObligation } from '@/types'
 import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 
 export default function Veiculos() {
+  const { canEdit } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const initialTab = searchParams.get('aba') === 'ipva' ? 'ipva' : 'veiculos'
   const [activeTab, setActiveTab] = useState<'veiculos' | 'ipva'>(initialTab)
@@ -187,8 +189,20 @@ export default function Veiculos() {
 
       if (editingVehicle) {
         await vehiclesService.update(editingVehicle.id, payload)
+        await logAudit(
+          'EDICAO_VEICULO',
+          'vehicles',
+          editingVehicle.id,
+          `Veículo atualizado: ${payload.model} (${payload.plate || 'Sem placa'})`,
+        )
       } else {
-        await vehiclesService.create(payload)
+        const created = await vehiclesService.create(payload)
+        await logAudit(
+          'CRIACAO_VEICULO',
+          'vehicles',
+          created.id,
+          `Veículo cadastrado: ${payload.model} (${payload.plate || 'Sem placa'})`,
+        )
       }
       setVehModalOpen(false)
       loadData()
@@ -203,6 +217,12 @@ export default function Veiculos() {
     if (!deleteVehTarget) return
     try {
       await vehiclesService.delete(deleteVehTarget.id)
+      await logAudit(
+        'EXCLUSAO_VEICULO',
+        'vehicles',
+        deleteVehTarget.id,
+        `Veículo excluído: ${deleteVehTarget.model} (${deleteVehTarget.plate || 'Sem placa'})`,
+      )
       setDeleteVehTarget(null)
       loadData()
     } catch (err) {
@@ -245,10 +265,9 @@ export default function Veiculos() {
     setSavingOb(true)
     try {
       const selectedVeh = vehicles.find((v) => v.id === obVehicleId)
-      const computedName =
-        selectedVeh
-          ? `${selectedVeh.model}${selectedVeh.plate ? ` (${selectedVeh.plate})` : ''}`
-          : obVehicleName || 'Veículo'
+      const computedName = selectedVeh
+        ? `${selectedVeh.model}${selectedVeh.plate ? ` (${selectedVeh.plate})` : ''}`
+        : obVehicleName || 'Veículo'
 
       const payload: Partial<VehicleObligation> = {
         vehicle: obVehicleId,
@@ -264,8 +283,20 @@ export default function Veiculos() {
 
       if (editingObligation) {
         await obligationsService.update(editingObligation.id, payload)
+        await logAudit(
+          'EDICAO_OBRIGACAO',
+          'vehicle_obligations',
+          editingObligation.id,
+          `Obrigação exercício ${payload.year} atualizada para ${computedName}`,
+        )
       } else {
-        await obligationsService.create(payload)
+        const created = await obligationsService.create(payload)
+        await logAudit(
+          'CRIACAO_OBRIGACAO',
+          'vehicle_obligations',
+          created.id,
+          `Obrigação exercício ${payload.year} criada para ${computedName}`,
+        )
       }
       setObModalOpen(false)
       loadData()
@@ -280,6 +311,12 @@ export default function Veiculos() {
     if (!deleteObTarget) return
     try {
       await obligationsService.delete(deleteObTarget.id)
+      await logAudit(
+        'EXCLUSAO_OBRIGACAO',
+        'vehicle_obligations',
+        deleteObTarget.id,
+        `Obrigação exercício ${deleteObTarget.year} excluída (${deleteObTarget.vehicle_name})`,
+      )
       setDeleteObTarget(null)
       loadData()
     } catch (err) {
@@ -337,23 +374,25 @@ export default function Veiculos() {
             Frota patrimonial, histórico de IPVA/licenciamento, dívida ativa e pastas vinculadas
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          {activeTab === 'veiculos' ? (
-            <Button
-              onClick={openNewVehicle}
-              className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
-            >
-              <Plus className="w-4 h-4 mr-1" /> Novo Veículo
-            </Button>
-          ) : (
-            <Button
-              onClick={() => openNewObligation()}
-              className="bg-rose-600 hover:bg-rose-700 text-xs font-semibold"
-            >
-              <Plus className="w-4 h-4 mr-1" /> Nova Obrigação / Exercício
-            </Button>
-          )}
-        </div>
+        {canEdit && (
+          <div className="flex items-center gap-2">
+            {activeTab === 'veiculos' ? (
+              <Button
+                onClick={openNewVehicle}
+                className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Novo Veículo
+              </Button>
+            ) : (
+              <Button
+                onClick={() => openNewObligation()}
+                className="bg-rose-600 hover:bg-rose-700 text-xs font-semibold"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Nova Obrigação / Exercício
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Tabs Principais */}
@@ -474,26 +513,28 @@ export default function Veiculos() {
                           <Receipt className="w-3.5 h-3.5 mr-1" />
                           Exercícios ({vehObs.length})
                         </Button>
-                        <div className="flex gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => openEditVehicle(v)}
-                            className="h-7 px-2 text-slate-600 hover:text-blue-600"
-                            title="Editar Veículo"
-                          >
-                            <Edit className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setDeleteVehTarget(v)}
-                            className="h-7 px-2 text-slate-600 hover:text-red-600"
-                            title="Excluir Veículo"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </div>
+                        {canEdit && (
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEditVehicle(v)}
+                              className="h-7 px-2 text-slate-600 hover:text-blue-600"
+                              title="Editar Veículo"
+                            >
+                              <Edit className="w-3.5 h-3.5" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setDeleteVehTarget(v)}
+                              className="h-7 px-2 text-slate-600 hover:text-red-600"
+                              title="Excluir Veículo"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -556,24 +597,28 @@ export default function Veiculos() {
                           )}
                         </td>
                         <td className="py-3 px-4 text-right whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => openEditVehicle(v)}
-                              className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                            >
-                              <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => setDeleteVehTarget(v)}
-                              className="h-7 px-2 text-red-600 hover:text-red-800"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          </div>
+                          {canEdit ? (
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => openEditVehicle(v)}
+                                className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                              >
+                                <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setDeleteVehTarget(v)}
+                                className="h-7 px-2 text-red-600 hover:text-red-800"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-slate-400">Somente leitura</span>
+                          )}
                         </td>
                       </tr>
                     )
@@ -715,24 +760,28 @@ export default function Veiculos() {
                         {ob.notes || '—'}
                       </td>
                       <td className="py-3 px-4 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => openEditObligation(ob)}
-                            className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                          >
-                            <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setDeleteObTarget(ob)}
-                            className="h-7 px-2 text-red-600 hover:text-red-800"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </div>
+                        {canEdit ? (
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEditObligation(ob)}
+                              className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                            >
+                              <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setDeleteObTarget(ob)}
+                              className="h-7 px-2 text-red-600 hover:text-red-800"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-slate-400">Somente leitura</span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -781,9 +830,7 @@ export default function Veiculos() {
                       </div>
                       <div>
                         Multas:{' '}
-                        <strong>
-                          {ob.fines_value ? `R$ ${ob.fines_value.toFixed(2)}` : '—'}
-                        </strong>
+                        <strong>{ob.fines_value ? `R$ ${ob.fines_value.toFixed(2)}` : '—'}</strong>
                       </div>
                       <div>
                         Status: <strong>{ob.status}</strong>
@@ -1100,9 +1147,8 @@ export default function Veiculos() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir Veículo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza de que deseja excluir o veículo{' '}
-              <strong>{deleteVehTarget?.model}</strong> (Placa:{' '}
-              {deleteVehTarget?.plate || 'Sem placa'})? Esta ação não pode ser desfeita.
+              Tem certeza de que deseja excluir o veículo <strong>{deleteVehTarget?.model}</strong>{' '}
+              (Placa: {deleteVehTarget?.plate || 'Sem placa'})? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

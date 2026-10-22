@@ -22,19 +22,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { processesService } from '@/services/api'
+import { processesService, logAudit } from '@/services/api'
+import { useAuth } from '@/contexts/AuthContext'
 import type { ProcessItem } from '@/types'
 import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 
 export default function Processos() {
+  const { canEdit } = useAuth()
   const [processes, setProcesses] = useState<ProcessItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('todos')
   const [typeFilter, setTypeFilter] = useState('todos')
-  const [viewMode, setViewMode] = useState<ViewMode>(() =>
-    getStoredViewMode('processos', 'cards'),
-  )
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode('processos', 'cards'))
 
   // Modal Criar/Editar
   const [modalOpen, setModalOpen] = useState(false)
@@ -111,8 +111,20 @@ export default function Processos() {
 
       if (editingProcess) {
         await processesService.update(editingProcess.id, payload)
+        await logAudit(
+          'EDICAO_PROCESSO',
+          'processes',
+          editingProcess.id,
+          `Processo atualizado: ${payload.title} (${payload.box_code || 'Sem caixa'})`,
+        )
       } else {
-        await processesService.create(payload)
+        const created = await processesService.create(payload)
+        await logAudit(
+          'CRIACAO_PROCESSO',
+          'processes',
+          created.id,
+          `Processo cadastrado: ${payload.title} (${payload.box_code || 'Sem caixa'})`,
+        )
       }
       setModalOpen(false)
       loadData()
@@ -127,6 +139,12 @@ export default function Processos() {
     if (!deleteTarget) return
     try {
       await processesService.delete(deleteTarget.id)
+      await logAudit(
+        'EXCLUSAO_PROCESSO',
+        'processes',
+        deleteTarget.id,
+        `Processo excluído: ${deleteTarget.title} (${deleteTarget.box_code || 'Sem caixa'})`,
+      )
       setDeleteTarget(null)
       loadData()
     } catch (err) {
@@ -159,15 +177,15 @@ export default function Processos() {
             Processos Jurídicos e Trabalhistas
           </h1>
           <p className="text-sm text-slate-500">
-            Processos ativos, suspensos e terminados vinculados a caixas físicas (CX N2, CX N4, CX N5/01)
+            Processos ativos, suspensos e terminados vinculados a caixas físicas (CX N2, CX N4, CX
+            N5/01)
           </p>
         </div>
-        <Button
-          onClick={openNew}
-          className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
-        >
-          <Plus className="w-4 h-4 mr-1" /> Novo Processo
-        </Button>
+        {canEdit && (
+          <Button onClick={openNew} className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold">
+            <Plus className="w-4 h-4 mr-1" /> Novo Processo
+          </Button>
+        )}
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
@@ -210,15 +228,9 @@ export default function Processos() {
             <option value="Outro">Outro</option>
           </select>
 
-          <span className="text-xs text-slate-400 font-medium">
-            {filtered.length} processo(s)
-          </span>
+          <span className="text-xs text-slate-400 font-medium">{filtered.length} processo(s)</span>
 
-          <ViewModeToggle
-            mode={viewMode}
-            onChange={setViewMode}
-            storageKey="processos"
-          />
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="processos" />
         </div>
       </div>
 
@@ -257,7 +269,9 @@ export default function Processos() {
               </CardHeader>
               <CardContent className="p-4 pt-1 space-y-1.5 text-xs text-slate-600">
                 <div className="flex justify-between">
-                  <span>Tipo: <strong>{pr.type}</strong></span>
+                  <span>
+                    Tipo: <strong>{pr.type}</strong>
+                  </span>
                   {pr.number && <span className="font-mono text-slate-400">Nº {pr.number}</span>}
                 </div>
                 {pr.lawyer && (
@@ -268,22 +282,28 @@ export default function Processos() {
                 {pr.notes && <p className="text-[11px] text-slate-400 italic">{pr.notes}</p>}
 
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-1">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => openEdit(pr)}
-                    className="h-7 px-2 text-blue-600 hover:text-blue-800 text-xs"
-                  >
-                    <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setDeleteTarget(pr)}
-                    className="h-7 px-2 text-red-600 hover:text-red-800 text-xs"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 mr-1" /> Excluir
-                  </Button>
+                  {canEdit ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEdit(pr)}
+                        className="h-7 px-2 text-blue-600 hover:text-blue-800 text-xs"
+                      >
+                        <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setDeleteTarget(pr)}
+                        className="h-7 px-2 text-red-600 hover:text-red-800 text-xs"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 mr-1" /> Excluir
+                      </Button>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-slate-400">Somente leitura</span>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -330,24 +350,28 @@ export default function Processos() {
                     </Badge>
                   </td>
                   <td className="py-3 px-4 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openEdit(pr)}
-                        className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                      >
-                        <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setDeleteTarget(pr)}
-                        className="h-7 px-2 text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
+                    {canEdit ? (
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => openEdit(pr)}
+                          className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeleteTarget(pr)}
+                          className="h-7 px-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <span className="text-[11px] text-slate-400">Somente leitura</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -475,8 +499,8 @@ export default function Processos() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir Processo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza de que deseja excluir o processo{' '}
-              <strong>{deleteTarget?.title}</strong>? Esta ação removerá o registro do sistema.
+              Tem certeza de que deseja excluir o processo <strong>{deleteTarget?.title}</strong>?
+              Esta ação removerá o registro do sistema.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

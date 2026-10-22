@@ -22,11 +22,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { employeesService } from '@/services/api'
+import { employeesService, logAudit } from '@/services/api'
+import { useAuth } from '@/contexts/AuthContext'
 import type { Employee } from '@/types'
 import { ViewModeToggle, getStoredViewMode, type ViewMode } from '@/components/ViewModeToggle'
 
 export default function Funcionarios() {
+  const { canEdit } = useAuth()
   const [employees, setEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -107,8 +109,20 @@ export default function Funcionarios() {
 
       if (editingEmployee) {
         await employeesService.update(editingEmployee.id, payload)
+        await logAudit(
+          'EDICAO_FUNCIONARIO',
+          'employees',
+          editingEmployee.id,
+          `Prontuário atualizado: ${payload.name} (${payload.situation})`,
+        )
       } else {
-        await employeesService.create(payload)
+        const created = await employeesService.create(payload)
+        await logAudit(
+          'CRIACAO_FUNCIONARIO',
+          'employees',
+          created.id,
+          `Prontuário cadastrado: ${payload.name} (${payload.situation})`,
+        )
       }
       setModalOpen(false)
       loadData()
@@ -123,6 +137,12 @@ export default function Funcionarios() {
     if (!deleteTarget) return
     try {
       await employeesService.delete(deleteTarget.id)
+      await logAudit(
+        'EXCLUSAO_FUNCIONARIO',
+        'employees',
+        deleteTarget.id,
+        `Prontuário excluído: ${deleteTarget.name} (${deleteTarget.situation})`,
+      )
       setDeleteTarget(null)
       loadData()
     } catch (err) {
@@ -163,12 +183,11 @@ export default function Funcionarios() {
             Controle de prontuários em caixas físicas (CX N7 ex-colaboradores e CX N10 atuais)
           </p>
         </div>
-        <Button
-          onClick={openNew}
-          className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold"
-        >
-          <Plus className="w-4 h-4 mr-1" /> Novo Funcionário
-        </Button>
+        {canEdit && (
+          <Button onClick={openNew} className="bg-blue-600 hover:bg-blue-700 text-xs font-semibold">
+            <Plus className="w-4 h-4 mr-1" /> Novo Funcionário
+          </Button>
+        )}
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
@@ -205,15 +224,9 @@ export default function Funcionarios() {
             <option value="nao">Normalizados</option>
           </select>
 
-          <span className="text-xs text-slate-400 font-medium">
-            {filtered.length} registro(s)
-          </span>
+          <span className="text-xs text-slate-400 font-medium">{filtered.length} registro(s)</span>
 
-          <ViewModeToggle
-            mode={viewMode}
-            onChange={setViewMode}
-            storageKey="funcionarios"
-          />
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="funcionarios" />
         </div>
       </div>
 
@@ -272,22 +285,28 @@ export default function Funcionarios() {
                 {emp.notes && <p className="text-[11px] text-slate-400 italic">{emp.notes}</p>}
 
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-1">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => openEdit(emp)}
-                    className="h-7 px-2 text-blue-600 hover:text-blue-800 text-xs"
-                  >
-                    <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setDeleteTarget(emp)}
-                    className="h-7 px-2 text-red-600 hover:text-red-800 text-xs"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 mr-1" /> Excluir
-                  </Button>
+                  {canEdit ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEdit(emp)}
+                        className="h-7 px-2 text-blue-600 hover:text-blue-800 text-xs"
+                      >
+                        <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setDeleteTarget(emp)}
+                        className="h-7 px-2 text-red-600 hover:text-red-800 text-xs"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 mr-1" /> Excluir
+                      </Button>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-slate-400">Somente leitura</span>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -345,24 +364,28 @@ export default function Funcionarios() {
                     )}
                   </td>
                   <td className="py-3 px-4 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openEdit(emp)}
-                        className="h-7 px-2 text-blue-600 hover:text-blue-800"
-                      >
-                        <Edit className="w-3.5 h-3.5 mr-1" /> Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setDeleteTarget(emp)}
-                        className="h-7 px-2 text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
+                    {canEdit ? (
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => openEdit(emp)}
+                          className="h-7 px-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <Edit className="w-3.5 h-3.5 mr-1" /> Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeleteTarget(emp)}
+                          className="h-7 px-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <span className="text-[11px] text-slate-400">Somente leitura</span>
+                    )}
                   </td>
                 </tr>
               ))}

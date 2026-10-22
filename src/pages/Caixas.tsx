@@ -145,11 +145,7 @@ export default function Caixas() {
           <span className="text-xs text-slate-400 font-medium">
             {filteredBoxes.length} caixa(s) encontrada(s)
           </span>
-          <ViewModeToggle
-            mode={viewMode}
-            onChange={setViewMode}
-            storageKey="caixas"
-          />
+          <ViewModeToggle mode={viewMode} onChange={setViewMode} storageKey="caixas" />
         </div>
       </div>
 

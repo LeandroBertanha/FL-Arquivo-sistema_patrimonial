@@ -88,7 +88,6 @@ const navGroups: NavGroup[] = [
       { title: 'Pessoas', href: '/pessoas', icon: Users },
       { title: 'Imóveis', href: '/imoveis', icon: Home },
       { title: 'Veículos', href: '/veiculos', icon: Car },
-      { title: 'IPVA e Obrigações', href: '/ipva-obrigacoes', icon: Receipt },
       { title: 'Processos', href: '/processos', icon: Scale },
       { title: 'Funcionários', href: '/funcionarios', icon: UserCheck },
     ],

@@ -24,6 +24,13 @@ import Processos from './pages/Processos'
 import Funcionarios from './pages/Funcionarios'
 import MapaArquivo from './pages/MapaArquivo'
 import Movimentacoes from './pages/Movimentacoes'
+import Inventario from './pages/Inventario'
+import RetencaoDescarte from './pages/RetencaoDescarte'
+import MapaPatrimonial from './pages/MapaPatrimonial'
+import Relatorios from './pages/Relatorios'
+import Auditoria from './pages/Auditoria'
+import RevisaoMigracao from './pages/RevisaoMigracao'
+import Configuracoes from './pages/Configuracoes'
 import GlobalSearch from './pages/GlobalSearch'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -136,6 +143,13 @@ const App = () => (
               <Route path="/funcionarios" element={<Funcionarios />} />
               <Route path="/mapa-arquivo" element={<MapaArquivo />} />
               <Route path="/movimentacoes" element={<Movimentacoes />} />
+              <Route path="/inventario" element={<Inventario />} />
+              <Route path="/retencao" element={<RetencaoDescarte />} />
+              <Route path="/mapa-patrimonial" element={<MapaPatrimonial />} />
+              <Route path="/relatorios" element={<Relatorios />} />
+              <Route path="/auditoria" element={<Auditoria />} />
+              <Route path="/revisao-migracao" element={<RevisaoMigracao />} />
+              <Route path="/configuracoes" element={<Configuracoes />} />
             </Route>
           </Route>
 

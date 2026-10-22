@@ -19,6 +19,7 @@ import type {
   MapNodeRecord,
   InventorySession,
   DocumentItem,
+  User,
 } from '@/types'
 
 // Helper para log de auditoria automático
@@ -237,7 +238,10 @@ export const vehiclesService = {
     return rec
   },
   async delete(id: string) {
-    const old = await pb.collection('vehicles').getOne<Vehicle>(id).catch(() => null)
+    const old = await pb
+      .collection('vehicles')
+      .getOne<Vehicle>(id)
+      .catch(() => null)
     await pb.collection('vehicles').delete(id)
     await logAudit(
       'EXCLUSAO_VEICULO',
@@ -276,7 +280,10 @@ export const obligationsService = {
     return rec
   },
   async delete(id: string) {
-    const old = await pb.collection('vehicle_obligations').getOne<VehicleObligation>(id).catch(() => null)
+    const old = await pb
+      .collection('vehicle_obligations')
+      .getOne<VehicleObligation>(id)
+      .catch(() => null)
     await pb.collection('vehicle_obligations').delete(id)
     await logAudit(
       'EXCLUSAO_OBRIGACAO',
@@ -307,14 +314,12 @@ export const processesService = {
     return rec
   },
   async delete(id: string) {
-    const old = await pb.collection('processes').getOne<ProcessItem>(id).catch(() => null)
+    const old = await pb
+      .collection('processes')
+      .getOne<ProcessItem>(id)
+      .catch(() => null)
     await pb.collection('processes').delete(id)
-    await logAudit(
-      'EXCLUSAO_PROCESSO',
-      'process',
-      id,
-      `Processo excluído: ${old?.title || id}`,
-    )
+    await logAudit('EXCLUSAO_PROCESSO', 'process', id, `Processo excluído: ${old?.title || id}`)
     return true
   },
 }
@@ -338,7 +343,10 @@ export const employeesService = {
     return rec
   },
   async delete(id: string) {
-    const old = await pb.collection('employees').getOne<Employee>(id).catch(() => null)
+    const old = await pb
+      .collection('employees')
+      .getOne<Employee>(id)
+      .catch(() => null)
     await pb.collection('employees').delete(id)
     await logAudit(
       'EXCLUSAO_FUNCIONARIO',
@@ -600,7 +608,14 @@ export const usersService = {
     await logAudit('EDICAO_USUARIO', 'user', id, `Usuário atualizado: ${rec.name} (${rec.role})`)
     return rec
   },
-  async create(data: { email: string; name: string; password?: string; passwordConfirm?: string; role?: string; status?: string }) {
+  async create(data: {
+    email: string
+    name: string
+    password?: string
+    passwordConfirm?: string
+    role?: string
+    status?: string
+  }) {
     const defaultPassword = data.password || 'Mudar@1234'
     const rec = await pb.collection('users').create<User>({
       email: data.email,
@@ -614,7 +629,10 @@ export const usersService = {
     return rec
   },
   async delete(id: string) {
-    const old = await pb.collection('users').getOne<User>(id).catch(() => null)
+    const old = await pb
+      .collection('users')
+      .getOne<User>(id)
+      .catch(() => null)
     await pb.collection('users').delete(id)
     await logAudit('EXCLUSAO_USUARIO', 'user', id, `Usuário excluído: ${old?.name || id}`)
     return true
